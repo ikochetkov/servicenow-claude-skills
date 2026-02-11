@@ -1,0 +1,40 @@
+{
+  "name": "servicenow-claude-skills",
+  "owner": {
+    "name": "Ihor Kochetkov",
+    "email": "ihor@mobizinc.com"
+  },
+  "metadata": {
+    "description": "ServiceNow skills for Claude — SPA development, UI components, and pricing/licensing",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "building-servicenow-spas",
+      "description": "Builds and deploys Single Page Applications to ServiceNow using Vite single-file bundling, HashRouter, and dual-mode authentication. Handles new SPA creation, existing app conversion, deployment pipelines, and ServiceNow artifact setup.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/building-servicenow-spas"
+      ]
+    },
+    {
+      "name": "building-servicenow-components",
+      "description": "Builds custom ServiceNow UI Builder components using the Next Experience UI Framework. Covers createCustomElement, immutable state with updateState, action handlers, HTTP effects, Now Components, CLI setup, and deployment.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/building-servicenow-components"
+      ]
+    },
+    {
+      "name": "servicenow-pricing",
+      "description": "ServiceNow pricing and packaging expert. Use when answering questions about ServiceNow product pricing, licensing, SKUs, packaging tiers, module comparisons, Now Assist, AI features, or any ServiceNow commercial questions.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/servicenow-pricing"
+      ]
+    }
+  ]
+}
