@@ -5,8 +5,8 @@
     "email": "ihor@mobizinc.com"
   },
   "metadata": {
-    "description": "ServiceNow skills for Claude — SPA development, UI components, and pricing/licensing",
-    "version": "1.0.0"
+    "description": "ServiceNow skills for Claude — SPA development, UI components, design system, and pricing/licensing",
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -34,6 +34,15 @@
       "strict": false,
       "skills": [
         "./skills/servicenow-pricing"
+      ]
+    },
+    {
+      "name": "design-servicenow-style",
+      "description": "ServiceNow design system guide for building apps that look and feel native to the ServiceNow platform. Covers Next Experience (Horizon/Polaris) workspace components, Service Portal (AngularJS) widgets, and Classic UI styling. Provides colors, typography, spacing, component patterns, accessibility guidelines, and code samples.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/design-servicenow-style"
       ]
     }
   ]

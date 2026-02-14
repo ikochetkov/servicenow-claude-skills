@@ -6,6 +6,7 @@ Skills that teach Claude how to build, deploy, and price ServiceNow solutions.
 |-------|-------------|
 | **building-servicenow-spas** | Build & deploy Single Page Applications to ServiceNow (Vite, HashRouter, dual-mode auth, ParentHashSync) |
 | **building-servicenow-components** | Build UI Builder components using Next Experience framework (createCustomElement, state, effects) |
+| **design-servicenow-style** | ServiceNow design system — colors, typography, spacing, component patterns for Next Experience, Service Portal, and Classic UI |
 | **servicenow-pricing** | ServiceNow pricing, licensing, SKUs, packaging tiers, and module comparisons |
 
 ---
@@ -25,6 +26,7 @@ This method gives you automatic updates — when skills are updated in this repo
 ```
 /plugin install building-servicenow-spas@servicenow-claude-skills
 /plugin install building-servicenow-components@servicenow-claude-skills
+/plugin install design-servicenow-style@servicenow-claude-skills
 /plugin install servicenow-pricing@servicenow-claude-skills
 ```
 
@@ -36,13 +38,14 @@ This method gives you automatic updates — when skills are updated in this repo
 
 ## Install to Claude Desktop or Claude.ai
 
-**Step 1.** Download the `.skill` file for the skill you need:
+**Step 1.** Download the skill file (`.skill` or `.zip` — same contents, pick whichever your system prefers):
 
-| Skill | Download |
-|-------|----------|
-| Building ServiceNow SPAs | [`building-servicenow-spas.skill`](dist/building-servicenow-spas.skill) |
-| Building ServiceNow Components | [`building-servicenow-components.skill`](dist/building-servicenow-components.skill) |
-| ServiceNow Pricing | [`servicenow-pricing.skill`](dist/servicenow-pricing.skill) |
+| Skill | .skill | .zip |
+|-------|--------|------|
+| Building ServiceNow SPAs | [`building-servicenow-spas.skill`](dist/building-servicenow-spas.skill) | [`building-servicenow-spas.zip`](dist/building-servicenow-spas.zip) |
+| Building ServiceNow Components | [`building-servicenow-components.skill`](dist/building-servicenow-components.skill) | [`building-servicenow-components.zip`](dist/building-servicenow-components.zip) |
+| Design ServiceNow Style | [`design-servicenow-style.skill`](dist/design-servicenow-style.skill) | [`design-servicenow-style.zip`](dist/design-servicenow-style.zip) |
+| ServiceNow Pricing | [`servicenow-pricing.skill`](dist/servicenow-pricing.skill) | [`servicenow-pricing.zip`](dist/servicenow-pricing.zip) |
 
 > Click the link above → then click the **Download raw file** button on GitHub.
 
@@ -79,6 +82,19 @@ Teaches Claude how to build custom UI Builder components using ServiceNow's Next
 - Now Components library usage
 - CLI setup (`snc ui-component`) and deployment
 
+### design-servicenow-style
+
+ServiceNow design system guide for building apps that match the native ServiceNow look and feel. Covers:
+
+- Next Experience (Horizon/Polaris) design tokens and CSS custom properties
+- Service Portal (AngularJS/Bootstrap 3) SCSS variables and widget styling
+- Classic UI compatibility guidelines
+- Complete color system, typography scale, spacing, shadows, and border radius
+- Component patterns (forms, lists, cards, modals, navigation, notifications)
+- Accessibility (WCAG 2.1 AA) checklist and focus management
+- Ready-to-use code templates for UI Builder components, Service Portal widgets, and standalone SPAs
+- Dark mode / theming support
+
 ### servicenow-pricing
 
 Comprehensive knowledge base for ServiceNow pricing and packaging. Covers:
@@ -100,10 +116,12 @@ servicenow-claude-skills/
 ├── skills/                     ← skill source files
 │   ├── building-servicenow-spas/
 │   ├── building-servicenow-components/
+│   ├── design-servicenow-style/
 │   └── servicenow-pricing/
-├── dist/                       ← downloadable .skill files (Claude Desktop)
-│   ├── building-servicenow-spas.skill
-│   ├── building-servicenow-components.skill
-│   └── servicenow-pricing.skill
+├── dist/                       ← downloadable files (Claude Desktop / claude.ai)
+│   ├── building-servicenow-spas.skill / .zip
+│   ├── building-servicenow-components.skill / .zip
+│   ├── design-servicenow-style.skill / .zip
+│   └── servicenow-pricing.skill / .zip
 └── README.md
 ```
