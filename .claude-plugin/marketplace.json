@@ -5,8 +5,8 @@
     "email": "ihor@mobizinc.com"
   },
   "metadata": {
-    "description": "ServiceNow skills for Claude — SPA development, UI components, design system, and pricing/licensing",
-    "version": "1.1.0"
+    "description": "ServiceNow skills for Claude — SPA development, UI components, design system, pricing/licensing, and Flow Designer analysis",
+    "version": "1.2.0"
   },
   "plugins": [
     {
@@ -43,6 +43,15 @@
       "strict": false,
       "skills": [
         "./skills/design-servicenow-style"
+      ]
+    },
+    {
+      "name": "servicenow-fd",
+      "description": "ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/servicenow-fd"
       ]
     }
   ]

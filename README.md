@@ -8,6 +8,7 @@ Skills that teach Claude how to build, deploy, and price ServiceNow solutions.
 | **building-servicenow-components** | Build UI Builder components using Next Experience framework (createCustomElement, state, effects) |
 | **design-servicenow-style** | ServiceNow design system — colors, typography, spacing, component patterns for Next Experience, Service Portal, and Classic UI |
 | **servicenow-pricing** | ServiceNow pricing, licensing, SKUs, packaging tiers, and module comparisons |
+| **servicenow-fd** | Flow Designer analysis — flow structure, execution logs, subflow drill-down, Mermaid diagrams |
 
 ---
 
@@ -28,6 +29,7 @@ This method gives you automatic updates — when skills are updated in this repo
 /plugin install building-servicenow-components@servicenow-claude-skills
 /plugin install design-servicenow-style@servicenow-claude-skills
 /plugin install servicenow-pricing@servicenow-claude-skills
+/plugin install servicenow-fd@servicenow-claude-skills
 ```
 
 **Step 3.** Done. Start a conversation and mention the topic — Claude will use the skill automatically.
@@ -46,6 +48,7 @@ This method gives you automatic updates — when skills are updated in this repo
 | Building ServiceNow Components | [`building-servicenow-components.skill`](dist/building-servicenow-components.skill) | [`building-servicenow-components.zip`](dist/building-servicenow-components.zip) |
 | Design ServiceNow Style | [`design-servicenow-style.skill`](dist/design-servicenow-style.skill) | [`design-servicenow-style.zip`](dist/design-servicenow-style.zip) |
 | ServiceNow Pricing | [`servicenow-pricing.skill`](dist/servicenow-pricing.skill) | [`servicenow-pricing.zip`](dist/servicenow-pricing.zip) |
+| ServiceNow Flow Designer | [`servicenow-fd.skill`](dist/servicenow-fd.skill) | [`servicenow-fd.zip`](dist/servicenow-fd.zip) |
 
 > Click the link above → then click the **Download raw file** button on GitHub.
 
@@ -105,6 +108,19 @@ Comprehensive knowledge base for ServiceNow pricing and packaging. Covers:
 - Packaging tiers (Standard / Pro / Enterprise)
 - Module comparisons and licensing models
 
+### servicenow-fd
+
+ServiceNow Flow Designer analysis and diagnostics. Covers:
+
+- **Design-time analysis** — describe any flow's actions, subflows, logic blocks, and stages
+- **V1 vs V2 table detection** — automatically handles legacy and modern flow table formats
+- **Runtime execution** — fetch latest execution, state, runtime, logs, warnings, and errors
+- **Subflow drill-down** — recursively analyze subflow internals
+- **Visual diagrams** — generate Mermaid flowcharts from flow structure
+- **Catalog item linkage** — find which flow backs a catalog item
+
+Requires the ServiceNow AI Bridge adapter installed on the target instance.
+
 ---
 
 ## Repo structure
@@ -117,11 +133,13 @@ servicenow-claude-skills/
 │   ├── building-servicenow-spas/
 │   ├── building-servicenow-components/
 │   ├── design-servicenow-style/
-│   └── servicenow-pricing/
+│   ├── servicenow-pricing/
+│   └── servicenow-fd/
 ├── dist/                       ← downloadable files (Claude Desktop / claude.ai)
 │   ├── building-servicenow-spas.skill / .zip
 │   ├── building-servicenow-components.skill / .zip
 │   ├── design-servicenow-style.skill / .zip
-│   └── servicenow-pricing.skill / .zip
+│   ├── servicenow-pricing.skill / .zip
+│   └── servicenow-fd.skill / .zip
 └── README.md
 ```
