@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "ServiceNow skills for Claude — SPA development, UI components, design system, pricing/licensing, and Flow Designer analysis",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {

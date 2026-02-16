@@ -15,7 +15,7 @@ When you query `sys_hub_sub_flow_instance_v2` or `sys_hub_sub_flow_instance`, th
 ### Step 1: Get the subflow's master flow record
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow
+GET /api/now/table/sys_hub_flow
   ?sys_id={subflow_sys_id}
   &sysparm_fields=sys_id,name,label_cache
   &sysparm_display_value=all
@@ -24,7 +24,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_flow
 ### Step 2: Check format (V2 or V1)
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_component
+GET /api/now/table/sys_hub_flow_component
   ?sysparm_query=flow={subflow_sys_id}
   &sysparm_limit=1
 ```
@@ -33,17 +33,17 @@ GET /api/1851835/ai_adapter_rest/sys_hub_flow_component
 
 **V2 (3 parallel queries):**
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_action_instance_v2
+GET /api/now/table/sys_hub_action_instance_v2
   ?sysparm_query=flow={subflow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,action_type,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
 
-GET /api/1851835/ai_adapter_rest/sys_hub_sub_flow_instance_v2
+GET /api/now/table/sys_hub_sub_flow_instance_v2
   ?sysparm_query=flow={subflow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,subflow,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
 
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_logic_instance_v2
+GET /api/now/table/sys_hub_flow_logic_instance_v2
   ?sysparm_query=flow={subflow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,logic_definition,order,comment,parent_ui_id,flow_variables_assigned
   &sysparm_display_value=all&sysparm_limit=100
@@ -51,7 +51,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_flow_logic_instance_v2
 
 **V1 (use subflow name in dot-walk, then deduplicate):**
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_action_instance
+GET /api/now/table/sys_hub_action_instance
   ?sysparm_query=flow.name={subflow_name}^ORDERBYorder
   &sysparm_fields=flow,ui_id,action_type,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=200

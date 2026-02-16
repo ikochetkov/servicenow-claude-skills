@@ -19,10 +19,11 @@ Analyze any ServiceNow Flow Designer flow — describe its structure, fetch exec
 
 ## Prerequisites
 
-The **ServiceNow AI Bridge** adapter must be installed on the target instance. All queries use:
+All queries use the **standard ServiceNow Table API** — no additional plugins or adapters required:
 ```
-https://{instance}/api/1851835/ai_adapter_rest/{table}
+https://{instance}/api/now/table/{table}
 ```
+Just Basic Auth credentials with read access to Flow Designer tables.
 
 See [references/api-patterns.md](references/api-patterns.md) for authentication and query format.
 
@@ -31,7 +32,7 @@ See [references/api-patterns.md](references/api-patterns.md) for authentication 
 ### Find a catalog item's flow
 
 ```
-GET /api/1851835/ai_adapter_rest/sc_cat_item
+GET /api/now/table/sc_cat_item
   ?sysparm_query=name={item_name}
   &sysparm_fields=sys_id,name,flow_designer_flow
   &sysparm_display_value=all
@@ -44,7 +45,7 @@ The `flow_designer_flow` field links to `sys_hub_flow`. Save the sys_id for all 
 Flows use one of two table formats. **Always check V2 first:**
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_component
+GET /api/now/table/sys_hub_flow_component
   ?sysparm_query=flow={flow_sys_id}
   &sysparm_limit=1
 ```
@@ -57,17 +58,17 @@ See [references/design-time-analysis.md](references/design-time-analysis.md) for
 ### Get flow steps (V2 — 3 parallel queries)
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_action_instance_v2
+GET /api/now/table/sys_hub_action_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,action_type,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
 
-GET /api/1851835/ai_adapter_rest/sys_hub_sub_flow_instance_v2
+GET /api/now/table/sys_hub_sub_flow_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,subflow,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
 
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_logic_instance_v2
+GET /api/now/table/sys_hub_flow_logic_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,logic_definition,order,comment,parent_ui_id,flow_variables_assigned
   &sysparm_display_value=all&sysparm_limit=100
@@ -76,7 +77,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_flow_logic_instance_v2
 ### Get flow stages (V2 only)
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_stage
+GET /api/now/table/sys_hub_flow_stage
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=label,order,value,always_show
   &sysparm_limit=50
@@ -85,7 +86,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_flow_stage
 ### Get latest execution
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_flow_context
+GET /api/now/table/sys_flow_context
   ?sysparm_query=flow={flow_sys_id}^ORDERBYDESCsys_created_on
   &sysparm_fields=sys_id,name,state,run_time,source_record,source_table,error_message,stages,reporting,sys_created_on,calling_source,execution_id
   &sysparm_display_value=all&sysparm_limit=1
@@ -105,4 +106,5 @@ After fetching flow steps, generate a Mermaid flowchart. See [references/visual-
 | [references/runtime-execution.md](references/runtime-execution.md) | Execution tables, log levels, RITM details, error analysis |
 | [references/subflow-drilldown.md](references/subflow-drilldown.md) | Recursive subflow analysis patterns |
 | [references/visual-diagrams.md](references/visual-diagrams.md) | Mermaid flowchart generation from flow data |
-| [references/api-patterns.md](references/api-patterns.md) | AI Bridge adapter authentication and query format |
+| [references/slack-diagrams.md](references/slack-diagrams.md) | Posting flow diagrams to Slack (mermaid.ink URL rendering) |
+| [references/api-patterns.md](references/api-patterns.md) | Table API authentication, query format, response structure |

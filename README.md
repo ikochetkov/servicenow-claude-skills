@@ -119,7 +119,7 @@ ServiceNow Flow Designer analysis and diagnostics. Covers:
 - **Visual diagrams** — generate Mermaid flowcharts from flow structure
 - **Catalog item linkage** — find which flow backs a catalog item
 
-Requires the ServiceNow AI Bridge adapter installed on the target instance.
+Uses the standard ServiceNow Table API — no additional plugins required.
 
 ---
 

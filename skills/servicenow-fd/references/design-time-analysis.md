@@ -21,7 +21,7 @@ sys_hub_flow_stage               ← named stages (field: label, order)
 ### V2 Action Steps
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_action_instance_v2
+GET /api/now/table/sys_hub_action_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,action_type,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
@@ -30,7 +30,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_action_instance_v2
 ### V2 Subflow Calls
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_sub_flow_instance_v2
+GET /api/now/table/sys_hub_sub_flow_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,subflow,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=100
@@ -41,7 +41,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_sub_flow_instance_v2
 ### V2 Logic Blocks
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_logic_instance_v2
+GET /api/now/table/sys_hub_flow_logic_instance_v2
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=sys_id,ui_id,logic_definition,order,comment,parent_ui_id,flow_variables_assigned
   &sysparm_display_value=all&sysparm_limit=100
@@ -52,7 +52,7 @@ Common logic definitions: "Top Level Try", "Top Level Catch", "If", "Else", "Mak
 ### V2 Stages
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow_stage
+GET /api/now/table/sys_hub_flow_stage
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
   &sysparm_fields=label,order,value,always_show
   &sysparm_limit=50
@@ -73,7 +73,7 @@ sys_hub_flow_logic        ← logic blocks
 ### V1 Action Steps
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_action_instance
+GET /api/now/table/sys_hub_action_instance
   ?sysparm_query=flow.name={flow_name}^ORDERBYorder
   &sysparm_fields=flow,ui_id,action_type,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=200
@@ -82,7 +82,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_action_instance
 ### V1 Subflow Calls
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_sub_flow_instance
+GET /api/now/table/sys_hub_sub_flow_instance
   ?sysparm_query=flow.name={flow_name}^ORDERBYorder
   &sysparm_fields=flow,ui_id,subflow,order,comment,parent_ui_id
   &sysparm_display_value=all&sysparm_limit=200
@@ -107,7 +107,7 @@ V1 queries return results from ALL snapshot versions of the flow. To get the cor
 ### Catalog Item → Flow Link
 
 ```
-GET /api/1851835/ai_adapter_rest/sc_cat_item
+GET /api/now/table/sc_cat_item
   ?sysparm_query=name={item_name}
   &sysparm_fields=sys_id,name,flow_designer_flow
   &sysparm_display_value=all
@@ -118,7 +118,7 @@ GET /api/1851835/ai_adapter_rest/sc_cat_item
 ### Trigger Type
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_trigger_instance
+GET /api/now/table/sys_hub_trigger_instance
   ?sysparm_query=flow.name={flow_name}
   &sysparm_fields=trigger_type,comment
   &sysparm_display_value=all
@@ -129,7 +129,7 @@ GET /api/1851835/ai_adapter_rest/sys_hub_trigger_instance
 `sys_hub_flow.label_cache` is a JSON field containing steps whose outputs are referenced by other steps. This is a quick way to see some steps, but it **misses many consumer-only steps** that don't produce referenced outputs.
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_hub_flow
+GET /api/now/table/sys_hub_flow
   ?sys_id={flow_sys_id}
   &sysparm_fields=sys_id,name,label_cache
 ```

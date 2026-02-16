@@ -1,23 +1,27 @@
-# AI Bridge API Patterns
+# ServiceNow API Patterns
 
-## Adapter Base URL
+## Base URL
 
-All Flow Designer queries use the AI Bridge adapter:
+All Flow Designer queries use the standard **ServiceNow Table API**:
 
 ```
-https://{instance}/api/1851835/ai_adapter_rest/{table}
+https://{instance}/api/now/table/{table}
 ```
 
-The namespace `1851835` is hardcoded in the update set.
+No additional plugins, adapters, or update sets required.
+
+> **Alternative:** If the AI Bridge adapter is installed, you can also use `/api/1851835/ai_adapter_rest/{table}` with the same query parameters. The adapter adds a `meta` wrapper to responses but is otherwise identical for read operations.
 
 ## Authentication
 
-All requests require Basic Auth with admin credentials:
+All requests require Basic Auth:
 
 ```bash
-curl -u "admin:password" \
-  "https://{instance}/api/1851835/ai_adapter_rest/{table}?{params}"
+curl -u "username:password" \
+  "https://{instance}/api/now/table/{table}?{params}"
 ```
+
+The user needs read access to Flow Designer tables (`sys_hub_flow`, `sys_hub_action_instance_v2`, `sys_flow_context`, etc.).
 
 ## Common Query Parameters
 
@@ -28,9 +32,42 @@ curl -u "admin:password" \
 | `sysparm_limit` | Max records returned | `100` |
 | `sysparm_offset` | Pagination offset | `0` |
 | `sysparm_display_value` | Value format | `all` (returns both value and display_value) |
-| `sys_id` | Get single record | `abc123def456` |
 
 ## Response Format
+
+### Table API (standard)
+
+```json
+{
+  "result": [
+    {
+      "field_name": "value",
+      ...
+    }
+  ]
+}
+```
+
+### Table API with `sysparm_display_value=all`
+
+Each field returns both raw and display values:
+
+```json
+{
+  "result": [
+    {
+      "field_name": {
+        "value": "raw_sys_id_or_code",
+        "display_value": "Human Readable Name"
+      }
+    }
+  ]
+}
+```
+
+### AI Bridge adapter (alternative)
+
+Wraps results in an extra layer with metadata:
 
 ```json
 {
@@ -43,17 +80,6 @@ curl -u "admin:password" \
       "offset": 0,
       "limit": 100
     }
-  }
-}
-```
-
-When using `sysparm_display_value=all`, each field returns both raw and display values:
-
-```json
-{
-  "field_name": {
-    "value": "raw_sys_id_or_code",
-    "display_value": "Human Readable Name"
   }
 }
 ```
@@ -83,8 +109,8 @@ This traverses `flow` → `sys_hub_flow` → `name` field.
 
 For large result sets:
 1. First query with `sysparm_limit=100&sysparm_offset=0`
-2. Check `meta.total_count` vs `meta.count`
-3. If `total_count > count`, fetch next page with `sysparm_offset=100`
+2. Check response header `X-Total-Count` for total records
+3. If more exist, fetch next page with `sysparm_offset=100`
 
 ## Error Handling
 

@@ -14,7 +14,7 @@
 ### Get Latest Execution of a Flow
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_flow_context
+GET /api/now/table/sys_flow_context
   ?sysparm_query=flow={flow_sys_id}^ORDERBYDESCsys_created_on
   &sysparm_fields=sys_id,name,state,run_time,source_record,source_table,error_message,stages,reporting,sys_created_on,calling_source,execution_id
   &sysparm_display_value=all&sysparm_limit=1
@@ -49,7 +49,7 @@ Add state filter to the query:
 ### Get All Logs for an Execution
 
 ```
-GET /api/1851835/ai_adapter_rest/sys_flow_log
+GET /api/now/table/sys_flow_log
   ?sysparm_query=context={execution_sys_id}^ORDERBYsys_created_on
   &sysparm_fields=context,message,level,action,operation,sys_created_on
   &sysparm_display_value=all&sysparm_limit=100
@@ -88,6 +88,14 @@ Unique Key violation detected by database
 ```
 A business rule is trying to create a record that already exists. Usually non-fatal — the flow continues.
 
+**AD account already exists (MID Server / PowerShell):**
+```
+Error: The specified account already exists (Microsoft.ActiveDirectory.Management.ADIdentityAlreadyExistsException)
+Error: Failed while executing ActionCreateUserExtended.ps1
+Error: IPaaSActionProbe | status=error; message=The specified account already exists
+```
+The flow tried to create a user in Active Directory but the account already existed. This is a fatal error for the "Create User Extended" step — the flow typically enters WAITING state and requires manual intervention.
+
 **Undeclared output variables:**
 ```
 Warning: Encountered undeclared output variable: Company
@@ -100,7 +108,7 @@ A subflow is producing output values that aren't declared in its output schema. 
 ### Get RITM Details
 
 ```
-GET /api/1851835/ai_adapter_rest/sc_req_item
+GET /api/now/table/sc_req_item
   ?sys_id={source_record_sys_id}
   &sysparm_fields=number,state,short_description,opened_by,opened_at,assigned_to,stage
   &sysparm_display_value=all
