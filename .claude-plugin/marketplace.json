@@ -53,6 +53,15 @@
       "skills": [
         "./skills/servicenow-fd"
       ]
+    },
+    {
+      "name": "mobiz-servicenow-spm",
+      "description": "Manage ServiceNow Strategic Portfolio Management artifacts via AI Bridge (Mobiz-aware). Create/read/update/delete projects, tasks, milestones, epics, stories, resource plans, demands. Import complete project hierarchies from SOW. Covers SPM, project portfolio, pm_project, rm_story, rm_epic, demand management, resource plan, project task, milestone, agile backlog, SOW import, project hierarchy.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mobiz-servicenow-spm"
+      ]
     }
   ]
 }
