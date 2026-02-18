@@ -123,6 +123,27 @@ Uses the standard ServiceNow Table API — no additional plugins required.
 
 ---
 
+## Skill Development
+
+When creating or updating a skill, **always rebuild its dist files** before pushing:
+
+```bash
+# From repo root — rebuild dist for a specific skill
+cd skills/{skill-name}
+zip -r ../../dist/{skill-name}.skill SKILL.md references/
+cp ../../dist/{skill-name}.skill ../../dist/{skill-name}.zip
+```
+
+The `dist/` folder contains `.skill` and `.zip` files (identical content) used by Claude Desktop and claude.ai users. Claude Code users get updates directly from `skills/`, but Desktop/claude.ai users download from `dist/`.
+
+**Checklist:**
+1. Edit files under `skills/{skill-name}/`
+2. Rebuild `dist/{skill-name}.skill` and `.zip`
+3. Commit both source and dist changes
+4. Push to main
+
+---
+
 ## Repo structure
 
 ```
