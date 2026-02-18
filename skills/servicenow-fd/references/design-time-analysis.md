@@ -163,6 +163,42 @@ In both V1 and V2, `parent_ui_id` creates a nesting hierarchy:
 - Steps nested inside If/Else/Try/Catch blocks have `parent_ui_id` pointing to that logic block
 - This allows reconstructing the visual nesting seen in Flow Designer UI
 
+## Error Handler Detection (V2)
+
+V2 flows have two top-level sections visible in Flow Designer: **ACTIONS** (main flow) and **ERROR HANDLER**. These correspond to two root logic blocks:
+
+- **"Top Level Try"** (`logic_definition` display value) — contains all main flow steps
+- **"Top Level Catch"** (`logic_definition` display value) — contains all error handler steps
+
+### How to detect error handler steps
+
+1. Fetch all logic blocks from `sys_hub_flow_logic_instance_v2` (include `ui_id` and `parent_ui_id`)
+2. Find the logic block where `logic_definition` display value = `"Top Level Catch"` — save its `ui_id`
+3. Build a map of all `ui_id` → `parent_ui_id` relationships (from logic blocks, actions, and subflows)
+4. Expand the catch set: any `ui_id` whose `parent_ui_id` is already in the catch set is also an error handler component (repeat until no new additions)
+5. Mark any step whose `parent_ui_id` is in the catch descendants set as `errorHandler: true`
+
+### Example
+
+For "MHS - Unlock Active Directory Account":
+
+| Step | Type | Error Handler? |
+|------|------|---------------|
+| MHS - Look Up User in AD | subflow | No |
+| If (user found) | logic | No |
+| Unlock AD Account | action | No |
+| End (Complete) | logic | No |
+| **RITM Flow Error Handler** | subflow | **Yes** |
+| **If (error)** | logic | **Yes** |
+| **End (Cancelled)** | logic | **Yes** |
+
+### Key notes
+
+- **V2 only**: V1 flows don't have the Try/Catch structure
+- The "Top Level Try" and "Top Level Catch" blocks themselves are logic blocks with `parent_ui_id: null` (root level)
+- Error handler steps are typically fewer — often just an error-handling subflow and conditional logic
+- Both "Top Level Try" and "Top Level Catch" appear in the logic blocks query; filter by `logic_definition` display value
+
 ## Format Detection Strategy
 
 ```

@@ -1,6 +1,6 @@
 ---
 name: servicenow-fd
-description: ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), detects used vs unused stages via component_indexes, fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, stage usage, unused stages, catalog item flow, RITM execution.
+description: ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), detects used vs unused stages via component_indexes, identifies error handler steps via Top Level Try/Catch pattern, fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, stage usage, unused stages, catalog item flow, RITM execution, error handler, Top Level Catch, Top Level Try.
 ---
 
 # ServiceNow Flow Designer Analysis
@@ -13,6 +13,7 @@ Analyze any ServiceNow Flow Designer flow — describe its structure, fetch exec
 |-----------|-------------|
 | **Design-time analysis** | List all steps (actions, subflows, logic blocks), stages, and triggers for any flow |
 | **Stage usage analysis** | Detect which stages are used (referenced by steps) vs unused, with breakdown |
+| **Error handler detection** | Identify error handler steps via "Top Level Try"/"Top Level Catch" parent chain (V2 only) |
 | **Runtime execution** | Fetch latest execution, state, runtime, logs, warnings, and errors |
 | **Subflow drill-down** | Recursively describe any subflow's internal steps |
 | **Visual diagrams** | Generate Mermaid flowcharts from flow structure |
