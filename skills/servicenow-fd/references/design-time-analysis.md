@@ -54,11 +54,33 @@ Common logic definitions: "Top Level Try", "Top Level Catch", "If", "Else", "Mak
 ```
 GET /api/now/table/sys_hub_flow_stage
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
-  &sysparm_fields=label,order,value,always_show
+  &sysparm_fields=label,order,value,always_show,component_indexes
   &sysparm_limit=50
 ```
 
 Stages define named phases in the flow (e.g., "Create AD user", "Add to AD groups", "Sync Entra ID"). Stages only exist in V2 format.
+
+#### Detecting Used vs Unused Stages
+
+The `component_indexes` field maps each stage to the flow components (steps) that **set** that stage. It contains a comma-separated list of component `order` values from `sys_hub_flow_component`.
+
+- `component_indexes` is **null or empty** → stage is **UNUSED** (defined but no step sets it)
+- `component_indexes` has values (e.g., `"2"` or `"5,9"`) → stage is **USED** (at least one step transitions to it)
+
+Example for a flow with 6 stages:
+
+| Stage Label | order | component_indexes | Used? |
+|-------------|-------|-------------------|-------|
+| Request Cancelled | 0 | `11` | Yes — set by End block |
+| Delivery | 1 | null | **No** |
+| Waiting for Approval | 2 | null | **No** |
+| Fulfillment | 3 | `2` | Yes — set by subflow at order 2 |
+| Completed | 4 | `5,9` | Yes — set by two End blocks |
+| Request Approved | 5 | null | **No** |
+
+To map `component_indexes` back to specific steps, query `sys_hub_flow_component` for the flow and match by `order` field. This is optional — usually knowing used vs unused is sufficient.
+
+See [references/stage-usage-analysis.md](references/stage-usage-analysis.md) for detailed analysis patterns and reporting examples.
 
 ## V1 Tables (Legacy Flows)
 

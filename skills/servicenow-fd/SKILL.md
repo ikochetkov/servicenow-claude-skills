@@ -1,6 +1,6 @@
 ---
 name: servicenow-fd
-description: ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, catalog item flow, RITM execution.
+description: ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), detects used vs unused stages via component_indexes, fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, stage usage, unused stages, catalog item flow, RITM execution.
 ---
 
 # ServiceNow Flow Designer Analysis
@@ -12,6 +12,7 @@ Analyze any ServiceNow Flow Designer flow — describe its structure, fetch exec
 | Capability | Description |
 |-----------|-------------|
 | **Design-time analysis** | List all steps (actions, subflows, logic blocks), stages, and triggers for any flow |
+| **Stage usage analysis** | Detect which stages are used (referenced by steps) vs unused, with breakdown |
 | **Runtime execution** | Fetch latest execution, state, runtime, logs, warnings, and errors |
 | **Subflow drill-down** | Recursively describe any subflow's internal steps |
 | **Visual diagrams** | Generate Mermaid flowcharts from flow structure |
@@ -79,9 +80,11 @@ GET /api/now/table/sys_hub_flow_logic_instance_v2
 ```
 GET /api/now/table/sys_hub_flow_stage
   ?sysparm_query=flow={flow_sys_id}^ORDERBYorder
-  &sysparm_fields=label,order,value,always_show
+  &sysparm_fields=label,order,value,always_show,component_indexes
   &sysparm_limit=50
 ```
+
+The `component_indexes` field identifies which steps set each stage. If null/empty, the stage is **unused** (defined but no step transitions to it). See [references/stage-usage-analysis.md](references/stage-usage-analysis.md) for detailed patterns.
 
 ### Get latest execution
 
@@ -103,6 +106,7 @@ After fetching flow steps, generate a Mermaid flowchart. See [references/visual-
 | Document | Content |
 |----------|---------|
 | [references/design-time-analysis.md](references/design-time-analysis.md) | V1 vs V2 table formats, complete query patterns, deduplication strategy |
+| [references/stage-usage-analysis.md](references/stage-usage-analysis.md) | Detect used vs unused stages via `component_indexes`, bulk analysis, reporting |
 | [references/runtime-execution.md](references/runtime-execution.md) | Execution tables, log levels, RITM details, error analysis |
 | [references/subflow-drilldown.md](references/subflow-drilldown.md) | Recursive subflow analysis patterns |
 | [references/visual-diagrams.md](references/visual-diagrams.md) | Mermaid flowchart generation from flow data |
