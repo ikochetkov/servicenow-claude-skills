@@ -1,18 +1,7 @@
 ---
 name: design-servicenow-style
 description: >
-  ServiceNow design system guide for building apps that look and feel native to the ServiceNow platform.
-  Covers Next Experience (Horizon/Polaris) workspace components, Service Portal (AngularJS) widgets,
-  and Classic UI styling. Provides colors, typography, spacing, component patterns, accessibility
-  guidelines, and code samples for each framework variant. Grounded in real design tokens extracted
-  from ServiceNow's official Figma libraries (18 community files) and 1,973 --now-* CSS custom properties.
-  Use this skill whenever building ServiceNow-styled UIs, creating UI Builder components,
-  developing Service Portal widgets, building SPAs that integrate with ServiceNow, or any
-  coding task that should match ServiceNow's visual language. Trigger on mentions of
-  "ServiceNow style", "ServiceNow design", "Horizon", "Polaris", "Next Experience",
-  "Service Portal", "UI Builder", "workspace components", "now-experience", or any
-  request to make something look like ServiceNow. Even if the user just says "make it match
-  our ServiceNow instance" or "ServiceNow-like UI", use this skill.
+  ServiceNow design system guide with real Figma-extracted tokens. Covers Next Experience (Horizon/Polaris), Service Portal, and Classic UI. Includes spacing, colors, typography, 114 component specs, 1973 --now-* CSS properties, and 18 Figma library references. Use for ServiceNow-styled UIs, UI Builder components, Service Portal widgets, or any ServiceNow-matching visual work. Triggers: ServiceNow style, Horizon, Polaris, Next Experience, Service Portal, UI Builder, workspace components, now-experience.
 ---
 
 # ServiceNow Design System Guide
