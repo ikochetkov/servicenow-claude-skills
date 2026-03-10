@@ -4,7 +4,8 @@ description: >
   ServiceNow design system guide for building apps that look and feel native to the ServiceNow platform.
   Covers Next Experience (Horizon/Polaris) workspace components, Service Portal (AngularJS) widgets,
   and Classic UI styling. Provides colors, typography, spacing, component patterns, accessibility
-  guidelines, and code samples for each framework variant.
+  guidelines, and code samples for each framework variant. Grounded in real design tokens extracted
+  from ServiceNow's official Figma libraries (18 community files) and 1,973 --now-* CSS custom properties.
   Use this skill whenever building ServiceNow-styled UIs, creating UI Builder components,
   developing Service Portal widgets, building SPAs that integrate with ServiceNow, or any
   coding task that should match ServiceNow's visual language. Trigger on mentions of
@@ -16,159 +17,231 @@ description: >
 
 # ServiceNow Design System Guide
 
-This skill helps you build UIs that are visually consistent with ServiceNow's native applications. ServiceNow has multiple design frameworks — the right styling depends on which part of the platform you're targeting.
+This skill helps you build UIs that are visually consistent with ServiceNow's native applications. It is grounded in real design tokens and component specifications extracted from ServiceNow's official Figma libraries (Horizon Design System) and the platform's 1,973 CSS custom properties.
 
 ## First: Determine the Target Framework
 
-Before writing any code, clarify which ServiceNow experience the user is building for. Each has distinct styling rules:
+Before writing any code, clarify which ServiceNow experience the user is building for:
 
 | Framework | Era | Tech Stack | When to Use |
 |-----------|-----|-----------|-------------|
-| **Next Experience (Horizon)** | Current | Web Components, Seismic | UI Builder pages, Workspaces, Employee Center, new apps |
+| **Next Experience (Horizon)** | Current | Web Components (Seismic), `<now-*>` tags | UI Builder pages, Workspaces, Employee Center, new apps |
 | **Service Portal** | Legacy (still widely used) | AngularJS, Bootstrap 3 | Portal widgets, self-service catalogs, customer-facing pages |
 | **Classic UI (UI16)** | Legacy | jQuery, native | Backend admin views, list/form customizations |
 
-If the user doesn't specify, **default to Next Experience** — it's ServiceNow's current strategic direction. Ask if unsure: "Are you building for UI Builder/Workspace (Next Experience) or Service Portal (AngularJS)?"
+If the user doesn't specify, **default to Next Experience**. Ask if unsure: "Are you building for UI Builder/Workspace (Next Experience) or Service Portal (AngularJS)?"
 
-**Detailed reference files** — read the one matching the target framework:
+## Reference Files — Read the Ones Matching Your Task
 
-- `references/next-experience.md` — Horizon design tokens, Seismic components, workspace patterns, theming
+- `references/design-tokens.md` — **START HERE** — Complete spacing, grid, typography, color, shadow, and border radius tokens extracted from Figma + CSS custom properties, theme JSON format
+- `references/figma-libraries.md` — Full catalog of all 18 official Figma libraries with component inventories and direct links
+- `references/next-experience.md` — Horizon/Seismic web components, `<now-*>` element catalog, workspace patterns, theming API
 - `references/service-portal.md` — Bootstrap/SCSS variables, widget CSS patterns, portal theming
 - `references/common-patterns.md` — Shared UX patterns (forms, lists, cards, modals, navigation) with framework-specific implementations
 - `references/code-samples.md` — Ready-to-use code templates for both frameworks
 
-## Core Design Principles (All Frameworks)
+**Always read `design-tokens.md` first** — it contains the exact values you need for any ServiceNow-styled code.
 
-ServiceNow's design philosophy centers on these principles regardless of framework:
+## Core Design Principles
 
-**Clarity over decoration** — Every visual element should serve a purpose. Avoid decorative gradients, shadows, or animations that don't communicate state or hierarchy. ServiceNow UIs are clean, functional, and information-dense.
+ServiceNow's design philosophy:
 
-**Consistent density** — ServiceNow apps pack a lot of information into screens (lists, forms, dashboards). Don't over-space things. Use tight, purposeful spacing that lets users scan efficiently.
+**Clarity over decoration** — Every visual element serves a purpose. No decorative gradients, shadows, or animations. ServiceNow UIs are clean, functional, and information-dense.
 
-**Neutral palette with purposeful color** — The base UI is predominantly white/gray with color reserved for interactive elements (links, buttons), status indicators (critical/high/medium/low), and brand accents. Color should never be purely decorative.
+**Consistent density** — ServiceNow apps pack information into screens (lists, forms, dashboards). Use tight, purposeful spacing. The spacing scale starts at 2px (xxs) with md at 12px (not 16px like most systems).
 
-**Accessible by default** — WCAG 2.1 Level AA minimum. 4.5:1 contrast for normal text, 3:1 for large text and non-text elements. All interactive elements must be keyboard-accessible with visible focus indicators.
+**Neutral palette with purposeful color** — Base UI is white/gray. Color is reserved for interactive elements, status indicators, and brand accents. Never purely decorative.
 
-**Progressive disclosure** — Show what's needed, reveal details on demand. Use collapsible sections, tabs, and drill-down patterns rather than overwhelming with everything at once.
+**Accessible by default** — WCAG 2.1 Level AA minimum. 4.5:1 contrast for normal text, 3:1 for large text.
 
-## Quick Reference: Brand Colors
+**Progressive disclosure** — Show what's needed, reveal details on demand. Use collapsible sections, tabs, drill-down patterns.
 
-These are ServiceNow's core brand and UI colors used across all frameworks:
+## Quick Reference: Design Tokens
 
-| Role | Hex | Usage |
-|------|-----|-------|
-| Brand Dark Green | `#243c3e` | Brand identity, premium accents |
-| Brand Light Green | `#82b6a2` | Secondary brand, illustrations |
-| Interactive Primary | `#0056b3` | Links, primary buttons, active states |
-| Chrome/Nav Background | `#30302f` | Unified navigation bar, app shell |
-| Surface Primary | `#ffffff` | Main content background |
-| Surface Secondary | `#f4f4f4` | Card backgrounds, sidebar, secondary areas |
-| Surface Tertiary | `#e8e8e8` | Dividers, borders, disabled backgrounds |
-| Text Primary | `#1e1e1e` | Body text, headings |
-| Text Secondary | `#6b6b6b` | Captions, timestamps, helper text |
-| Text Tertiary | `#949494` | Placeholders, disabled text |
-| Status Critical | `#c8102e` | Errors, critical incidents (P1) |
-| Status High | `#e86e2c` | Warnings, high priority (P2) |
-| Status Moderate | `#eeb422` | Moderate priority (P3) |
-| Status Success | `#2e8540` | Success states, resolved items |
-| Status Info | `#0070d2` | Informational badges, links |
+### Spacing (from Figma component set, verified)
 
-## Quick Reference: Typography
+| Token | CSS Property | Value | Usage |
+|-------|-------------|-------|-------|
+| `xxs` | `--now-spacing-xxs` | 2px | Minimal inline spacing |
+| `xs` | `--now-spacing-xs` | 4px | Tight gaps, icon margins |
+| `sm` | `--now-spacing-sm` | 8px | Small padding, icon-to-text |
+| `md` | `--now-spacing-md` | 12px | Default padding, form gaps |
+| `lg` | `--now-spacing-lg` | 16px | Section padding |
+| `xl` | `--now-spacing-xl` | 24px | Section separation |
+| `xxl` | `--now-spacing-xxl` | 32px | Major breaks |
+| `3xl` | `--now-spacing-3xl` | 40px | Page-level spacing |
+
+**Note:** ServiceNow's `md` spacing is 12px, not the typical 16px found in other design systems. This creates the characteristic dense feel.
+
+### Colors (from Figma + CSS hooks)
+
+| Role | Hex | CSS Property |
+|------|-----|-------------|
+| Brand Dark Teal | `#2a3d40` | `--now-color_brand--primary` |
+| Brand Light Green | `#82b6a2` | `--now-color_brand--secondary` |
+| Interactive Primary | `#0056b3` | `--now-color--primary-1` |
+| Chrome/Nav Background | `#30302f` | `--now-unified-nav_bg` |
+| Surface Primary | `#ffffff` | `--now-color_background--primary` |
+| Surface Secondary | `#f4f4f4` | `--now-color--neutral-1` |
+| Surface Tertiary | `#e8e8e8` | `--now-color--neutral-2` |
+| Text Primary | `#1e1e1e` | `--now-color_text--primary` |
+| Text Secondary | `#6b6b6b` | `--now-color_text--secondary` |
+| Text Tertiary | `#949494` | `--now-color_text--tertiary` |
+| Critical | `#c8102e` | `--now-color--alert-critical-2` |
+| High/Warning | `#e86e2c` | `--now-color--alert-high-2` |
+| Moderate | `#eeb422` | `--now-color--alert-moderate-2` |
+| Success | `#2e8540` | `--now-color--alert-positive-2` |
+| Info | `#0070d2` | `--now-color--alert-info-2` |
+
+### Typography (Figma → Production mapping)
 
 | Element | Font | Size | Weight | Line Height |
 |---------|------|------|--------|-------------|
-| Page Title | Cabin / Arial | 32px | 600 (Semibold) | 1.25 |
+| Display | Cabin (prod) / Gilroy (Figma) | 64px | 700 | 1.15 |
+| Page Title (H1) | Cabin / Arial | 32px | 600 | 1.25 |
 | Section Header (H2) | Cabin / Arial | 24px | 600 | 1.3 |
 | Content Header (H3) | Cabin / Arial | 20px | 600 | 1.4 |
-| Body Text | Lato / Arial | 16px | 400 (Regular) | 1.5 |
-| Body Small | Lato / Arial | 14px | 400 | 1.5 |
-| Complementary | Lato / Arial | 12px | 400 | 1.5 |
+| Body Large | Lato / Arial | 16px | 400 | 1.5 |
+| Body Default | Lato / Arial | 14px | 400 | 1.5 |
+| Body Small | Lato / Arial | 12px | 400 | 1.5 |
 | Button Label | Lato / Arial | 14px | 600 | 1 |
 
-**Font priority**: Next Experience uses **Cabin** (headings) and **Lato** (body). Service Portal and Classic UI default to **Arial**. When building standalone apps that should feel like ServiceNow, use Arial as the safe cross-platform choice — it closely matches what most ServiceNow instances render.
+**Font priority**: Next Experience uses **Cabin** (headings) and **Lato** (body). For standalone apps, use **Arial** as the safe cross-platform fallback.
 
-## Quick Reference: Spacing Scale
+### Shadows & Elevation
 
-ServiceNow uses an 8px baseline grid with 4px for fine adjustments:
+| Level | CSS Property | Value |
+|-------|-------------|-------|
+| None | — | `none` |
+| Low | `--now-shadow--sm` | `0 1px 2px rgba(0,0,0,0.1)` |
+| Medium | `--now-shadow--md` | `0 2px 8px rgba(0,0,0,0.15)` |
+| High | `--now-shadow--lg` | `0 4px 16px rgba(0,0,0,0.2)` |
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--xs` | 4px | Inline icon gaps, tight padding |
-| `--sm` | 8px | Compact padding, small gaps between elements |
-| `--md` | 16px | Default padding, form field gaps, card padding |
-| `--lg` | 24px | Section separation, card margins |
-| `--xl` | 32px | Major section breaks, page margins |
-| `--2xl` | 48px | Hero spacing, page-level vertical rhythm |
+### Border Radius
 
-## Quick Reference: Shadows & Elevation
+| Element | CSS Property | Value |
+|---------|-------------|-------|
+| Buttons, Cards, Inputs | `--now-border-radius--sm` | 4px |
+| Modals, Dialogs | `--now-border-radius--md` | 8px |
+| Large Containers | `--now-border-radius--lg` | 16px |
+| Avatars, Tags | `--now-border-radius--circle` | 50% |
 
-| Level | CSS | Usage |
-|-------|-----|-------|
-| None | `none` | Flat elements, inline content |
-| Low | `0 1px 2px rgba(0,0,0,0.1)` | Cards, dropdowns at rest |
-| Medium | `0 2px 8px rgba(0,0,0,0.15)` | Elevated cards, popovers |
-| High | `0 4px 16px rgba(0,0,0,0.2)` | Modals, dialogs, overlays |
+### Grid System (from Figma, 14 variants verified)
 
-## Quick Reference: Border Radius
+| Breakpoint | Width | Margins | Gutters | Max Content |
+|------------|-------|---------|---------|-------------|
+| Standard | 1280px | 24px | 48px | 1232px |
+| Wide | 1600px | 24px | 48px | 1552px |
 
-| Element | Radius | Notes |
-|---------|--------|-------|
-| Buttons | 4px | Slight rounding, not pill-shaped |
-| Cards | 4px | Consistent with buttons |
-| Input fields | 4px | Matches button/card radius |
-| Modals/Dialogs | 8px | Slightly more rounding for larger surfaces |
-| Avatars/Tags | 50% / 16px | Fully rounded |
+12-column grid. Responsive breakpoints: xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px, 2xl: 1600px.
 
-## Grid & Layout
+## Component Inventory (from Figma Libraries)
 
-ServiceNow uses a **12-column grid** system across all modern frameworks:
+The complete component set extracted from ServiceNow's official Figma libraries:
 
-- **Workspace layouts**: Chrome (nav) + Stage (main content area) with configurable column spans
-- **UI Builder pages**: CSS Grid with 12-column default, configurable via layout containers
-- **Service Portal**: Bootstrap 3 grid (`col-xs-*`, `col-sm-*`, `col-md-*`, `col-lg-*`)
-- **Breakpoints**: Follow standard responsive tiers (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px)
+### Workspace Components (114 components across 10 categories)
 
-## Icon System
+**Containers:** Card, Collapsible Container, Document Display, Evam Card, Modal, Modeless Dialog, Popover, Search Results Container, Template Card, Template Card Omnichannel
 
-ServiceNow's icons follow these specifications:
+**Content:** Analytics Q&A, Avatar, Badge, Contextual Sidebar, Dashboards Overview, Data Row, Data Set, Filter, Form Record Presence, Heading, Highlighted Value, Label Value (Inline/Stacked/Tabbed), Pill List, Presentational List, Record Header, Record Tags, Tooltip
 
-| Size Name | Pixels | Usage |
-|-----------|--------|-------|
-| Small (sm) | 12px | Inline text indicators, badges |
-| Medium (md) | 16px | Form field icons, list indicators, default |
-| Large (lg) | 24px | Navigation icons, action buttons |
-| Extra Large (xl) | 32px | Feature icons, empty states |
+**Controls:** Accordion, Active Call, Button, Button Bare, Button Circular, Button Iconic, Button Stateful, Color Picker, Color Selector, List Selector, Pill, Presence Icon, Search Facets, Select, Split Button, Stepper, Text Link, Typeahead, Typeahead Multi
 
-**Style**: Outline by default, Filled for active/selected states. Minimal, modern, rounded corners. For custom icons, follow ServiceNow's grid and radius guidelines documented at `horizon.servicenow.com/workspace/foundations/icons`.
+**Inputs:** Checkbox, Checklist, Date Time Calendar, Date Time Interval, Date Time Picker, Dropdown, Dropdown List, Flyout Menu, Input, Input Password, Input Phone, Input URL, Mini Calendar, Radio Buttons, Text Area, Toggle
+
+**Loaders:** Loader, Progress Bar
+
+**Messaging:** Alert, Alert List, Empty State, Message
+
+**Navigation:** Breadcrumbs, Content Tree, Pagination Control, Tabs, Unified Navigation
+
+**Experience Shell:** Page Navigation, Primary Navigation
+
+**Other (30+):** Activity Stream, Agent Chat, Appointment Calendar, Attachments, Carousel, Code Editor, Condition Builder, Confirmation Message, Contact Card, Digital Signature, Display Value Block, Email Composer, Form, Field Service Google Maps, Inbox, Kanban Board, Knowledge Content, KPI Details, Link Set, Link Set Group, Login, Lookup, Nested Comments, Node Map, MFA Setup, Playbook, Quick Filter, Related Content, Resizable Panes, SLA Timer, Star Rating, Timeline, Visualization Share Dialog, Workspace Global Search Tab, Workspace Notification
+
+### Conversational Interfaces (2 product groups)
+
+**Agent Chat:** Agent Chat Panel, Agent Chat Controls, Agent Chat Cards, Agent Chat Messages, Agent Chat System/Time Stamp
+
+**Virtual Agent:** Virtual Agent Header, Web Client Frame, Input States, Bot Messages, Requestor Messages, Timestamp, Avatar, Media Card, Q&A Card, Record Card, Link, Table Card, Button, New Messages, Service Portal Icon, Support Menu, Modal
+
+### Data Visualizations (24 pages of chart/graph components)
+
+Chart types, data grids, KPI widgets, and analytics components for dashboards and reporting.
+
+### Icons (826+ icons in Workspace library)
+
+Outline and filled variants. Sizes: 12px (sm), 16px (md), 24px (lg), 32px (xl).
+
+### Additional Libraries
+
+- **Employee Center (EC):** Components and templates for employee-facing portals
+- **Customer Portal (CP):** Components for customer-facing service portals
+- **Core Components:** Foundational UI kit shared across all experiences
+- **Core Icons:** Base icon set used across the platform
+- **Core Templates:** Layout and page templates
+- **Now Assist:** AI/GenAI UI components for Now Assist features
+- **Workspace Risk:** Risk management-specific components
+- **Workspace Dashboards:** Dashboard layout and widget components
+- **Workspace Templates:** Pre-built workspace page templates
+- **Accessibility:** Accessibility patterns, focus management, screen reader support
+
+## CSS Custom Properties (--now-* Namespace)
+
+ServiceNow uses **1,973 CSS custom properties** for theming. All follow the `--now-*` prefix. Key categories:
+
+| Category | Prefix | Count | Purpose |
+|----------|--------|-------|---------|
+| Colors | `--now-color--*` | ~200 | Color scales (primary, neutral, alert) |
+| Text Colors | `--now-color_text--*` | ~50 | Text-specific colors |
+| Background | `--now-color_background--*` | ~50 | Background colors |
+| Border | `--now-color_border--*` | ~30 | Border colors |
+| Surface | `--now-color_surface--*` | ~20 | Card/panel surfaces |
+| Chrome | `--now-color_chrome--*` | ~30 | Navigation chrome |
+| Brand | `--now-color_brand--*` | ~10 | Brand identity colors |
+| Unified Nav | `--now-unified-nav--*` | ~40 | Navigation-specific |
+| Font | `--now-font--*` | ~30 | Typography system |
+| Spacing | `--now-spacing--*` | 8 | Spacing scale |
+| Shadow | `--now-shadow--*` | 4 | Elevation system |
+| Border Radius | `--now-border-radius--*` | 4 | Corner rounding |
+
+Full reference: https://theme.deoprototypes.com/hooks
+
+## Theme JSON Format
+
+When creating custom themes, use this JSON format:
+```json
+{
+  "--now-color--primary-1": "0,86,179",
+  "--now-color_background--primary": "255,255,255",
+  "--now-color_text--primary": "30,30,30"
+}
+```
+
+**CRITICAL:** Values are RGB triplets WITHOUT spaces: `"0,86,179"` not `"0, 86, 179"`. Spaces cause blank-page rendering failures.
 
 ## Accessibility Checklist
 
-Every ServiceNow-styled component must meet these requirements:
+Every ServiceNow-styled component must meet:
 
 - Color contrast: 4.5:1 for normal text (<18pt), 3:1 for large text (18pt+ or 14pt+ bold)
-- All interactive elements focusable via keyboard (Tab/Shift+Tab navigation)
+- All interactive elements focusable via keyboard (Tab/Shift+Tab)
 - Visible focus indicator (minimum 2px outline, contrasting color)
 - ARIA labels on icon-only buttons and non-text interactive elements
 - Form fields have associated `<label>` elements or `aria-label`
 - Status communicated by more than color alone (icons, text, patterns)
 - Modals trap focus and return focus to trigger on close
-- `aria-live` regions for dynamic content updates (notifications, search results)
+- `aria-live` regions for dynamic content updates
 
-## What to Read Next
+## Figma Library Links
 
-After determining the framework, read the appropriate reference file for detailed implementation guidance:
-
-1. **Read** `references/next-experience.md` for UI Builder/Workspace development
-2. **Read** `references/service-portal.md` for Service Portal widget development
-3. **Read** `references/common-patterns.md` for UX pattern implementations
-4. **Read** `references/code-samples.md` for copy-paste starter templates
-
-These files contain the CSS custom properties, component APIs, theming configurations, and code patterns specific to each framework.
+For detailed component specifications, variant properties, and visual references, see `references/figma-libraries.md` which contains direct links to all 18 official ServiceNow Figma community files.
 
 ## Key Resources
 
-- **Horizon Design System**: https://horizon.servicenow.com/ (primary source of truth)
-- **Figma Libraries**: https://www.figma.com/@servicenow (component kits, UI Kit 1.0)
-- **ServiceNow Docs**: https://www.servicenow.com/docs/ (platform documentation)
-- **Component Playground**: https://horizon.servicenow.com/workspace/components (live component demos)
-- **Community**: https://www.servicenow.com/community/ (articles, examples, best practices)
+- **Horizon Design System**: https://horizon.servicenow.com/
+- **Figma Libraries**: https://www.figma.com/@servicenow
+- **Component Playground**: https://horizon.servicenow.com/workspace/components
+- **Theming Hooks**: https://theme.deoprototypes.com/hooks (1,973 CSS properties)
+- **ServiceNow Docs**: https://www.servicenow.com/docs/
+- **Community**: https://www.servicenow.com/community/
