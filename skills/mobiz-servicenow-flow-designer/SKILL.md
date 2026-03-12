@@ -1,11 +1,11 @@
 ---
-name: servicenow-fd
-description: ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), detects used vs unused stages via component_indexes, identifies error handler steps via Top Level Try/Catch pattern, fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, stage usage, unused stages, catalog item flow, RITM execution, error handler, Top Level Catch, Top Level Try.
+name: mobiz-servicenow-flow-designer
+description: ServiceNow Flow Designer analysis, diagnostics, and programmatic creation. Describes flow structure (actions, subflows, logic blocks, stages), detects used vs unused stages via component_indexes, identifies error handler steps via Top Level Try/Catch pattern, fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, generates visual Mermaid diagrams, discovers action type inputs, and builds flows programmatically via API with gzip/base64 encoded values payloads. Supports both V1 (legacy) and V2 (modern) flow table formats. Triggers on flow designer, sys_hub_flow, flow execution, flow analysis, flow steps, subflow, flow diagram, flow logs, flow errors, flow stages, stage usage, unused stages, catalog item flow, RITM execution, error handler, Top Level Catch, Top Level Try, build flow, create flow, programmatic flow, flow inputs, action inputs, values payload, fd_data, data pill, gzip base64.
 ---
 
-# ServiceNow Flow Designer Analysis
+# ServiceNow Flow Designer Analysis & Creation
 
-Analyze any ServiceNow Flow Designer flow — describe its structure, fetch execution history, drill into subflows, and generate visual diagrams.
+Analyze any ServiceNow Flow Designer flow — describe its structure, fetch execution history, drill into subflows, generate visual diagrams, and **build flows programmatically via API**.
 
 ## Capabilities
 
@@ -18,6 +18,9 @@ Analyze any ServiceNow Flow Designer flow — describe its structure, fetch exec
 | **Subflow drill-down** | Recursively describe any subflow's internal steps |
 | **Visual diagrams** | Generate Mermaid flowcharts from flow structure |
 | **Catalog item linkage** | Find which flow is linked to a catalog item |
+| **Programmatic creation** | Build complete flows via API — create records, insert steps, wire inputs, encode payloads |
+| **Input discovery** | Query any action type to discover its required/optional inputs before building |
+| **Values decode/encode** | Read and write the gzip/base64 values column that stores all step inputs |
 
 ## Prerequisites
 
@@ -26,6 +29,8 @@ All queries use the **standard ServiceNow Table API** — no additional plugins 
 https://{instance}/api/now/table/{table}
 ```
 Just Basic Auth credentials with read access to Flow Designer tables.
+
+For **programmatic creation**, you additionally need write access to `sys_hub_flow`, `sys_hub_action_instance_v2`, `sys_hub_flow_logic_instance_v2`, and `sys_hub_flow_component`.
 
 See [references/api-patterns.md](references/api-patterns.md) for authentication and query format.
 
@@ -76,6 +81,32 @@ GET /api/now/table/sys_hub_flow_logic_instance_v2
   &sysparm_display_value=all&sysparm_limit=100
 ```
 
+### Discover action type inputs
+
+Before building a flow, discover what inputs an action type requires:
+
+```
+GET /api/now/table/sys_hub_action_input
+  ?sysparm_query=action_type={action_type_sys_id}^model_type=input
+  &sysparm_fields=sys_id,name,label,type,mandatory,default_value,order
+  &sysparm_display_value=all&sysparm_limit=50
+```
+
+Returns parameter definitions (sys_id, name, label, type, mandatory) — use these to construct the values payload. See [references/programmatic-flow-creation.md](references/programmatic-flow-creation.md) for the complete workflow.
+
+### Decode step input values
+
+Step inputs are stored as gzip/base64 in the `values` column. To read them:
+
+```python
+import base64, gzip, json
+decoded = base64.b64decode(values_string)
+decompressed = gzip.decompress(decoded).decode('utf-8')
+parsed = json.loads(decompressed)
+```
+
+Action instance values are an **array** of input objects. Logic instance values are an **object** with keys like `inputs`, `variables`, etc.
+
 ### Get flow stages (V2 only)
 
 ```
@@ -102,11 +133,22 @@ See [references/runtime-execution.md](references/runtime-execution.md) for execu
 
 After fetching flow steps, generate a Mermaid flowchart. See [references/visual-diagrams.md](references/visual-diagrams.md) for patterns.
 
+### Build a flow programmatically
+
+See [references/programmatic-flow-creation.md](references/programmatic-flow-creation.md) for the complete guide covering:
+- Creating flow records, variables, and steps via API
+- Encoding/decoding the gzip/base64 values payload
+- Wiring inputs with static values, data pills, or scripts
+- Parent-child nesting with ui_id/parent_ui_id
+- Interactive workflow: discover inputs → ask user → build payload → create via API
+- Worked example with Python code
+
 ## Reference Documents
 
 | Document | Content |
 |----------|---------|
 | [references/design-time-analysis.md](references/design-time-analysis.md) | V1 vs V2 table formats, complete query patterns, deduplication strategy |
+| [references/programmatic-flow-creation.md](references/programmatic-flow-creation.md) | **Build flows via API** — tables, values encoding, input discovery, data pills, scripts, worked examples |
 | [references/stage-usage-analysis.md](references/stage-usage-analysis.md) | Detect used vs unused stages via `component_indexes`, bulk analysis, reporting |
 | [references/runtime-execution.md](references/runtime-execution.md) | Execution tables, log levels, RITM details, error analysis |
 | [references/subflow-drilldown.md](references/subflow-drilldown.md) | Recursive subflow analysis patterns |
