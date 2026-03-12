@@ -46,12 +46,12 @@
       ]
     },
     {
-      "name": "servicenow-fd",
-      "description": "ServiceNow Flow Designer analysis and diagnostics. Describes flow structure (actions, subflows, logic blocks, stages), fetches runtime execution details (state, logs, errors, timing), drills into subflows recursively, and generates visual Mermaid diagrams. Supports both V1 (legacy) and V2 (modern) flow table formats.",
+      "name": "mobiz-servicenow-flow-designer",
+      "description": "ServiceNow Flow Designer analysis, diagnostics, and programmatic creation. Describes flow structure, fetches runtime execution details, drills into subflows, generates Mermaid diagrams, discovers action type inputs, and builds flows programmatically via API with gzip/base64 encoded values payloads. Supports V1 and V2 table formats.",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/servicenow-fd"
+        "./skills/mobiz-servicenow-flow-designer"
       ]
     },
     {
