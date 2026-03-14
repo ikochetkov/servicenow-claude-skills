@@ -29,7 +29,6 @@ Part of the **Horizon Design System**, updated with each major ServiceNow releas
 | **Templates** | Available on [@servicenow](https://www.figma.com/@servicenow) | 8 pages of ready-made workspace page templates. |
 | **Risk Management Templates** | Available on [@servicenow](https://www.figma.com/@servicenow) | 7 pages of IRM/Risk Management specific templates. |
 | **Dashboard Templates** | Available on [@servicenow](https://www.figma.com/@servicenow) | 8 pages of dashboard layout templates. |
-| **Now Assist Components** | [1496251077635557615](https://www.figma.com/community/file/1496251077635557615) | Now Assist AI patterns (Yokohama release). |
 
 ### Core UI (Shared Foundation) — 3 libraries
 
@@ -143,8 +142,113 @@ Chat summary, Task Summary, Feedback Popover, Now Assist context menu, Now Assis
 
 ---
 
+## Employee Center Components (from Horizon Docs)
+
+**Header Widget** — [Horizon link](https://horizon.servicenow.com/service-portal/widgets/employee-center-header-widget)
+Provides org logo, global search, user profile access, links to key areas.
+
+**Footer Widget** — [Horizon link](https://horizon.servicenow.com/service-portal/widgets/employee-center-footer-widget)
+Legal disclaimers, privacy policies, contact info, resource links.
+
+**Mega Menu** — New EC Pro component for desktop and mobile navigation.
+
+---
+
+## Customer Portal Components (from Horizon Docs)
+
+| Widget | Horizon URL | Purpose |
+|--------|------------|---------|
+| My Items | [Link](https://horizon.servicenow.com/service-portal/widgets/my-items-widget) | User's active tasks, approvals, requests |
+| Banner Carousel | [Link](https://horizon.servicenow.com/service-portal/widgets/portal-banner-carousel-widget) | Rotating banners with images, text, CTAs |
+| Data List | [Link](https://horizon.servicenow.com/service-portal/widgets/portal-data-list-widget) | Interactive tabular case data |
+| Browse Taxonomy | [Link](https://horizon.servicenow.com/service-portal/widgets/portal-browse-taxonomy-widget) | Hierarchical content discovery |
+| Information Links | [Link](https://horizon.servicenow.com/service-portal/widgets/information-links-cd-widget) | Organized link collections |
+| Event Calendar | [Link](https://horizon.servicenow.com/service-portal/widgets/event-calendar-cd-widget) | Event listings |
+| Portal Polaris Header | Store app | Two-level header with search, profile, menu |
+| Customer History (Zurich) | [CSM Blog](https://www.servicenow.com/community/csm-blog/what-s-new-in-zurich-for-customer-service-management/ba-p/3331112) | Searchable customer activity timeline |
+
+---
+
+## Core Components — Horizon Documentation Links (from Horizon Docs)
+
+150+ workspace components documented at https://horizon.servicenow.com/workspace/components
+
+Key components with direct URLs:
+- **Button**: https://horizon.servicenow.com/workspace/components/now-button (States: Default/Hover/Pressed/Focus/Disabled, one primary per page)
+- **Modal**: https://horizon.servicenow.com/workspace/components/now-modal (Sizes: sm/md/lg/full-screen/custom)
+- **Modeless Dialog**: https://horizon.servicenow.com/workspace/components/now-modeless-dialog
+- **Accordion**: https://horizon.servicenow.com/workspace/components/now-accordion
+- **Record List**: https://horizon.servicenow.com/workspace/components/now-record-list-connected
+- **Dropdown List**: https://horizon.servicenow.com/workspace/components/now-dropdown-list
+- **List Selector**: https://horizon.servicenow.com/workspace/components/sn-list-selector
+- **Pill List**: https://horizon.servicenow.com/workspace/components/now-pill-list
+- **Heading**: https://horizon.servicenow.com/workspace/components/now-heading
+- **Image**: https://horizon.servicenow.com/workspace/components/now-image
+- **IFrame**: https://horizon.servicenow.com/workspace/components/now-iframe
+- **Progress Bar**: https://horizon.servicenow.com/workspace/components/now-progress-bar
+- **Date-Time**: https://horizon.servicenow.com/workspace/components/now-date-time
+- **Icon**: https://horizon.servicenow.com/components/now-icon (4 sizes: sm/md/lg/xl, 2 styles: outline/filled)
+
+---
+
+## Now Assist — Detailed Specs (from Horizon Docs)
+
+**Context Menu** — [Horizon link](https://horizon.servicenow.com/workspace/components/sn-now-assist-context-menu)
+- **Draggable variant**: For text generation (elaborate/shorten text), single-element context
+- **Fixed/Embedded variant**: For summarization, multi-element context
+- **7 states**: Default, Trigger, Generating, Results, Error, Hover, Click
+- **Configuration types**: Skill-based (Skill ID), Out-of-box (Configuration ID), Custom
+
+---
+
+## Dashboard Templates — Types (from Horizon Docs)
+
+[Horizon link](https://horizon.servicenow.com/workspace/foundations/data-visualization/dashboard)
+
+3 dashboard types:
+- **Strategic**: Track progress toward goals, display KPIs
+- **Operational**: Real-time operational data, day-to-day monitoring
+- **Analytical**: Comprehensive performance overview, trend analysis
+
+Built with nested components and full-page layouts.
+
+---
+
+## Accessibility Specifications (from Horizon Docs)
+
+[Horizon link](https://horizon.servicenow.com/guidelines/accessibility/a11y-overview)
+
+- **WCAG**: 2.1 AA (moving to 2.2 AA)
+- **Text contrast**: 4.5:1 standard, 3:1 large text
+- **Non-text contrast**: 3:1 for icons, controls, visual states
+- **Reflow**: Down to 320px viewport without loss
+- **Keyboard**: Full navigation, logical tab order, clear focus indicators
+- **ARIA**: Semantic HTML, ARIA labels, screen reader support
+- **Forced Color Mode**: Windows High Contrast compatible
+
+---
+
+## Horizon Design System Quick Links
+
+| Category | URL |
+|----------|-----|
+| All Components | https://horizon.servicenow.com/workspace/components |
+| Page Templates | https://horizon.servicenow.com/workspace/page-templates |
+| Typography | https://horizon.servicenow.com/workspace/foundations/typography/typography-overview |
+| Color | https://horizon.servicenow.com/workspace/foundations/color/using-color |
+| Icons | https://horizon.servicenow.com/workspace/foundations/icons/icon-library |
+| Illustrations | https://horizon.servicenow.com/workspace/foundations/illustrations/illustrations-overview |
+| Accessibility | https://horizon.servicenow.com/guidelines/accessibility/a11y-overview |
+| Core UI | https://horizon.servicenow.com/core-ui/overview |
+| Service Portal | https://horizon.servicenow.com/service-portal/overview |
+| Data Visualization | https://horizon.servicenow.com/workspace/foundations/data-visualization/dashboard |
+
+---
+
 ## Release Cadence
 
 Figma libraries update for each major ServiceNow family release (twice yearly, named after cities). Updates publish ~30 days after GA.
 
 Recent releases: Utah → Vancouver → Washington DC → Xanadu → Yokohama → Zurich (current).
+
+Archived at: https://github.com/ServiceNow/FigmaResources (maintains n-2 releases)
