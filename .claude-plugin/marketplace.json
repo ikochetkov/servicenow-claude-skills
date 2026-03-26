@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "ServiceNow skills for Claude — SPA development, UI components, design system, pricing/licensing, and Flow Designer analysis",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   "plugins": [
     {
@@ -61,6 +61,15 @@
       "strict": false,
       "skills": [
         "./skills/mobiz-servicenow-spm"
+      ]
+    },
+    {
+      "name": "develop-remote-mcp",
+      "description": "Build and deploy remote MCP servers with OAuth authentication, StreamableHTTP transport, and Railway hosting. Covers MCP SDK architecture, single dispatcher pattern, dual transport, OAuth bridge pattern, persistent token storage, and Claude Desktop connector setup.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/develop-remote-mcp"
       ]
     }
   ]
