@@ -10,6 +10,7 @@ Skills that teach Claude how to build, deploy, and price ServiceNow solutions.
 | **servicenow-pricing** | ServiceNow pricing, licensing, SKUs, packaging tiers, and module comparisons |
 | **mobiz-servicenow-flow-designer** | Flow Designer analysis, diagnostics & programmatic creation — flow structure, execution logs, subflow drill-down, Mermaid diagrams, build flows via API |
 | **develop-remote-mcp** | Build & deploy remote MCP servers with OAuth, StreamableHTTP transport, and Railway hosting |
+| **mobiz-servicenow-awa-schedules** | ServiceNow schedule management & AWA eligibility validation (working hours, time off, availability checks, AWA diagnostics) |
 
 ---
 
@@ -32,6 +33,7 @@ This method gives you automatic updates — when skills are updated in this repo
 /plugin install servicenow-pricing@servicenow-claude-skills
 /plugin install mobiz-servicenow-flow-designer@servicenow-claude-skills
 /plugin install develop-remote-mcp@servicenow-claude-skills
+/plugin install mobiz-servicenow-awa-schedules@servicenow-claude-skills
 ```
 
 **Step 3.** Done. Start a conversation and mention the topic — Claude will use the skill automatically.
@@ -52,6 +54,7 @@ This method gives you automatic updates — when skills are updated in this repo
 | ServiceNow Pricing | [`servicenow-pricing.skill`](dist/servicenow-pricing.skill) | [`servicenow-pricing.zip`](dist/servicenow-pricing.zip) |
 | ServiceNow Flow Designer | [`mobiz-servicenow-flow-designer.skill`](dist/mobiz-servicenow-flow-designer.skill) | [`mobiz-servicenow-flow-designer.zip`](dist/mobiz-servicenow-flow-designer.zip) |
 | Develop Remote MCP | [`develop-remote-mcp.skill`](dist/develop-remote-mcp.skill) | [`develop-remote-mcp.zip`](dist/develop-remote-mcp.zip) |
+| Mobiz AWA Schedules | [`mobiz-servicenow-awa-schedules.skill`](dist/mobiz-servicenow-awa-schedules.skill) | [`mobiz-servicenow-awa-schedules.zip`](dist/mobiz-servicenow-awa-schedules.zip) |
 
 > Click the link above → then click the **Download raw file** button on GitHub.
 
@@ -127,6 +130,20 @@ ServiceNow Flow Designer analysis, diagnostics, and programmatic creation. Cover
 
 Uses the standard ServiceNow Table API — no additional plugins required.
 
+### mobiz-servicenow-awa-schedules
+
+ServiceNow schedule management and AWA (Advanced Work Assignment) eligibility validation. Covers:
+
+- **Fetch schedule** — resolve user, read cmn_schedule + cmn_schedule_span, convert UTC to schedule timezone
+- **Add time off** — create exclude spans with admin authorization check
+- **Update working hours** — end-old/create-new pattern preserving audit history
+- **Check availability** — overlap detection against time-off and busy entries
+- **AWA eligibility validation** — 6-check diagnostic (excluded group, AWA group membership, agent presence, channel capacity, universal capacity, schedule hours)
+- **Timezone mismatch detection** — catches mixed-timezone schedule bugs (days in one TZ, hours in another)
+- **Dual presentation** — markdown for Cowork/chat, Slack Block Kit for Slack
+
+Uses the standard ServiceNow Table API — no additional plugins required.
+
 ### develop-remote-mcp
 
 Teaches Claude how to build and deploy remote MCP servers that run as hosted web services. Covers:
@@ -176,13 +193,15 @@ servicenow-claude-skills/
 │   ├── design-servicenow-style/
 │   ├── servicenow-pricing/
 │   ├── mobiz-servicenow-flow-designer/
-│   └── develop-remote-mcp/
+│   ├── develop-remote-mcp/
+│   └── mobiz-servicenow-awa-schedules/
 ├── dist/                       ← downloadable files (Claude Desktop / claude.ai)
 │   ├── building-servicenow-spas.skill / .zip
 │   ├── building-servicenow-components.skill / .zip
 │   ├── design-servicenow-style.skill / .zip
 │   ├── servicenow-pricing.skill / .zip
 │   ├── mobiz-servicenow-flow-designer.skill / .zip
-│   └── develop-remote-mcp.skill / .zip
+│   ├── develop-remote-mcp.skill / .zip
+│   └── mobiz-servicenow-awa-schedules.skill / .zip
 └── README.md
 ```

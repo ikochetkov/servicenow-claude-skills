@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "ServiceNow skills for Claude — SPA development, UI components, design system, pricing/licensing, and Flow Designer analysis",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   "plugins": [
     {
@@ -70,6 +70,15 @@
       "strict": false,
       "skills": [
         "./skills/develop-remote-mcp"
+      ]
+    },
+    {
+      "name": "mobiz-servicenow-awa-schedules",
+      "description": "ServiceNow schedule management and AWA eligibility validation. Fetch working hours, add time off, update schedules, check availability, and diagnose AWA routing issues. Covers cmn_schedule, schedule spans, timezone conversion, admin auth checks, and 6-point AWA diagnostics.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mobiz-servicenow-awa-schedules"
       ]
     }
   ]
