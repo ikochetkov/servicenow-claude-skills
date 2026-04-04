@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "ServiceNow skills for Claude — SPA development, UI components, design system, pricing/licensing, and Flow Designer analysis",
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "plugins": [
     {
@@ -79,6 +79,15 @@
       "strict": false,
       "skills": [
         "./skills/mobiz-servicenow-awa-schedules"
+      ]
+    },
+    {
+      "name": "mobiz-servicenow-pdf",
+      "description": "Generate PDF reports server-side in ServiceNow using PDFGenerationAPI with inline SVG charts, CSS styling, tables, and images. Covers convertToPDF, convertToPDFWithHeaderFooter, CSS3 Paged Media, custom fonts, and the full pattern of HTML rendering + PDF attachment. Use when building PDF reports, generating PDFs from HTML, creating SVG charts for PDFs, or automating PDF email attachments in ServiceNow.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mobiz-servicenow-pdf"
       ]
     }
   ]

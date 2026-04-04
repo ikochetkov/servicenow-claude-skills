@@ -11,6 +11,7 @@ Skills that teach Claude how to build, deploy, and price ServiceNow solutions.
 | **mobiz-servicenow-flow-designer** | Flow Designer analysis, diagnostics & programmatic creation — flow structure, execution logs, subflow drill-down, Mermaid diagrams, build flows via API |
 | **develop-remote-mcp** | Build & deploy remote MCP servers with OAuth, StreamableHTTP transport, and Railway hosting |
 | **mobiz-servicenow-awa-schedules** | ServiceNow schedule management & AWA eligibility validation (working hours, time off, availability checks, AWA diagnostics) |
+| **mobiz-servicenow-pdf** | Generate PDF reports server-side in ServiceNow using PDFGenerationAPI with inline SVG charts, CSS styling, tables, and images |
 
 ---
 
@@ -34,6 +35,7 @@ This method gives you automatic updates — when skills are updated in this repo
 /plugin install mobiz-servicenow-flow-designer@servicenow-claude-skills
 /plugin install develop-remote-mcp@servicenow-claude-skills
 /plugin install mobiz-servicenow-awa-schedules@servicenow-claude-skills
+/plugin install mobiz-servicenow-pdf@servicenow-claude-skills
 ```
 
 **Step 3.** Done. Start a conversation and mention the topic — Claude will use the skill automatically.
@@ -55,6 +57,7 @@ This method gives you automatic updates — when skills are updated in this repo
 | ServiceNow Flow Designer | [`mobiz-servicenow-flow-designer.skill`](dist/mobiz-servicenow-flow-designer.skill) | [`mobiz-servicenow-flow-designer.zip`](dist/mobiz-servicenow-flow-designer.zip) |
 | Develop Remote MCP | [`develop-remote-mcp.skill`](dist/develop-remote-mcp.skill) | [`develop-remote-mcp.zip`](dist/develop-remote-mcp.zip) |
 | Mobiz AWA Schedules | [`mobiz-servicenow-awa-schedules.skill`](dist/mobiz-servicenow-awa-schedules.skill) | [`mobiz-servicenow-awa-schedules.zip`](dist/mobiz-servicenow-awa-schedules.zip) |
+| Mobiz ServiceNow PDF | [`mobiz-servicenow-pdf.skill`](dist/mobiz-servicenow-pdf.skill) | [`mobiz-servicenow-pdf.zip`](dist/mobiz-servicenow-pdf.zip) |
 
 > Click the link above → then click the **Download raw file** button on GitHub.
 
@@ -143,6 +146,18 @@ ServiceNow schedule management and AWA (Advanced Work Assignment) eligibility va
 - **Dual presentation** — markdown for Cowork/chat, Slack Block Kit for Slack
 
 Uses the standard ServiceNow Table API — no additional plugins required.
+
+### mobiz-servicenow-pdf
+
+Generate PDF reports server-side in ServiceNow using `sn_pdfgeneratorutils.PDFGenerationAPI`. Covers:
+
+- **convertToPDF / convertToPDFWithHeaderFooter** — API signatures, parameters, return values
+- **Inline SVG charts** — gauge charts, bar charts, stacked bar charts rendered as vector graphics in PDF
+- **CSS3 Paged Media** — @page rules, page numbers, running headers/footers, margins
+- **Table styling** — dark headers, alternating rows, grand totals with print-color-adjust
+- **Custom fonts** — sys_pdf_generation_font_family setup
+- **Full report pattern** — Script Include renderer + PDFGenerationAPI + scheduled job + email notification
+- **CSS limitations** — what works and what doesn't in iText7 (position absolute, flexbox, images)
 
 ### develop-remote-mcp
 
