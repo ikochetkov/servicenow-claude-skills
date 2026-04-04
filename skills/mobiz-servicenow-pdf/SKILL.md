@@ -1,6 +1,6 @@
 ---
 name: mobiz-servicenow-pdf
-description: Generate PDF reports server-side in ServiceNow using PDFGenerationAPI with inline SVG charts, CSS styling, tables, and images. Covers convertToPDF, convertToPDFWithHeaderFooter, CSS3 Paged Media, custom fonts, and the full pattern of HTML rendering + PDF attachment. Use when building PDF reports, generating PDFs from HTML, creating SVG charts for PDFs, or automating PDF email attachments in ServiceNow.
+description: Generate PDF reports server-side in ServiceNow using PDFGenerationAPI with inline SVG charts, CSS styling, tables, and images. Covers convertToPDF, convertToPDFWithHeaderFooter, CSS3 Paged Media, custom fonts, and the full pattern of HTML rendering + PDF attachment. Use whenever the user wants to generate a PDF, create a report with charts, attach a PDF to a record, convert HTML to PDF, build SVG gauge or bar charts for documents, automate scheduled reports with email attachments, or use iText7/PDFGenerationAPI in ServiceNow. Also use when the user asks about PDF limitations, print-color-adjust, or page break issues in ServiceNow.
 ---
 
 # ServiceNow PDF Generation
@@ -35,6 +35,8 @@ new sn_pdfgeneratorutils.PDFGenerationAPI().convertToPDF(
 ```
 
 Returns object: `{ status: 'success'|'failure', attachment_id: '...', message: '...', request_id: '...' }`
+
+**Filename gotcha:** The API auto-appends `.pdf` to `pdfName`. If you pass `'report.pdf'`, the attachment will be named `report.pdf.pdf`. Pass just `'report'` or strip the extension before calling.
 
 ### convertToPDFWithHeaderFooter
 
@@ -109,19 +111,49 @@ function buildBarChartSVG(labels, allocated, actual) {
     var yMax = Math.ceil(maxVal / 100) * 100 || 100;
     var groupWidth = chartWidth / labels.length;
     var barWidth = groupWidth * 0.35;
+    var barGap = groupWidth * 0.05;
+    var allocColor = '#1C1631', actualColor = '#4CAF50';
 
+    // Y-axis ticks and grid lines
+    var yAxisHtml = '';
+    var yTicks = 5, yTickStep = yMax / yTicks;
+    for (var t = 0; t <= yTicks; t++) {
+        var val = t * yTickStep;
+        var y = marginTop + chartHeight - (val / yMax) * chartHeight;
+        yAxisHtml += '<line x1="' + marginLeft + '" y1="' + y + '" x2="' + (marginLeft + chartWidth) + '" y2="' + y + '" stroke="#e0e0e0" stroke-width="1" />';
+        yAxisHtml += '<text x="' + (marginLeft - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="10" fill="#666">' + Math.round(val) + '</text>';
+    }
+
+    // Bars with value labels and X-axis labels
     var barsHtml = '';
     for (var i = 0; i < labels.length; i++) {
         var groupX = marginLeft + i * groupWidth + groupWidth * 0.15;
         var allocH = (allocated[i] / yMax) * chartHeight;
         var actH = (actual[i] / yMax) * chartHeight;
-        barsHtml += '<rect x="' + groupX + '" y="' + (marginTop + chartHeight - allocH) + '" width="' + barWidth + '" height="' + allocH + '" fill="#1C1631" />';
-        barsHtml += '<rect x="' + (groupX + barWidth + groupWidth * 0.05) + '" y="' + (marginTop + chartHeight - actH) + '" width="' + barWidth + '" height="' + actH + '" fill="#4CAF50" />';
+        var actX = groupX + barWidth + barGap;
+
+        barsHtml += '<rect x="' + groupX + '" y="' + (marginTop + chartHeight - allocH) + '" width="' + barWidth + '" height="' + allocH + '" fill="' + allocColor + '" />';
+        barsHtml += '<text x="' + (groupX + barWidth / 2) + '" y="' + (marginTop + chartHeight - allocH - 5) + '" text-anchor="middle" font-size="9" font-weight="bold">' + (allocated[i] > 0 ? Math.round(allocated[i]) : '') + '</text>';
+
+        barsHtml += '<rect x="' + actX + '" y="' + (marginTop + chartHeight - actH) + '" width="' + barWidth + '" height="' + actH + '" fill="' + actualColor + '" />';
+        barsHtml += '<text x="' + (actX + barWidth / 2) + '" y="' + (marginTop + chartHeight - actH - 5) + '" text-anchor="middle" font-size="9" font-weight="bold">' + (actual[i] > 0 ? Math.round(actual[i]) : '') + '</text>';
+
+        // X-axis label
+        barsHtml += '<text x="' + (groupX + barWidth + barGap / 2) + '" y="' + (marginTop + chartHeight + 20) + '" text-anchor="middle" font-size="10">' + labels[i] + '</text>';
     }
 
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + width + ' ' + height + '">'
-        + '<text x="' + (width / 2) + '" y="18" text-anchor="middle" font-size="14" font-weight="bold">Chart Title</text>'
-        + barsHtml
+        // Title
+        + '<text x="' + (width / 2) + '" y="18" text-anchor="middle" font-size="14" font-weight="bold">Allocated vs Actual</text>'
+        // Legend
+        + '<rect x="' + (width / 2 - 90) + '" y="26" width="14" height="14" fill="' + allocColor + '" />'
+        + '<text x="' + (width / 2 - 72) + '" y="37" font-size="11">Allocated</text>'
+        + '<rect x="' + (width / 2 + 10) + '" y="26" width="14" height="14" fill="' + actualColor + '" />'
+        + '<text x="' + (width / 2 + 28) + '" y="37" font-size="11">Actual</text>'
+        // Axes
+        + '<line x1="' + marginLeft + '" y1="' + marginTop + '" x2="' + marginLeft + '" y2="' + (marginTop + chartHeight) + '" stroke="#333" />'
+        + '<line x1="' + marginLeft + '" y1="' + (marginTop + chartHeight) + '" x2="' + (marginLeft + chartWidth) + '" y2="' + (marginTop + chartHeight) + '" stroke="#333" />'
+        + yAxisHtml + barsHtml
         + '</svg>';
 }
 ```
@@ -280,6 +312,47 @@ MyReportRenderer.prototype = {
 })();
 ```
 
+## Error Handling
+
+The `convertToPDF` return value may be a string or an already-parsed object depending on context. Always handle both:
+
+```javascript
+var result = pdfApi.convertToPDF(html, table, sysId, name);
+var resultObj = (typeof result === 'string') ? JSON.parse(result) : result;
+
+if (!resultObj || resultObj.status !== 'success') {
+    gs.error('PDF failed: ' + JSON.stringify(resultObj));
+    // Common failure messages:
+    //   "The Target table name - X is not valid" — table doesn't exist
+    //   "Conversion failed" — HTML parsing error (check for malformed tags)
+    //   null result — plugin not activated or API unavailable
+}
+```
+
+After successful conversion, always verify the attachment was actually created:
+
+```javascript
+var att = new GlideRecord('sys_attachment');
+att.addQuery('table_name', targetTable);
+att.addQuery('table_sys_id', targetSysId);
+att.addQuery('content_type', 'application/pdf');
+att.orderByDesc('sys_created_on');
+att.setLimit(1);
+att.query();
+if (!att.next()) {
+    gs.error('PDF conversion reported success but no attachment found');
+}
+```
+
+## HTML Size Considerations
+
+The API handles large HTML strings well — tested with 155KB+ HTML producing 153KB PDFs with 27 pages of charts and tables. For very large reports:
+
+- **System properties** have a practical limit around 4-8MB for storing base64 logos or HTML
+- **String concatenation** in Rhino can be slow for very large strings — build HTML in sections
+- **PDF output** is typically 60-80% smaller than the input HTML (vector compression)
+- If generating reports with 50+ pages, consider splitting into multiple PDFs to avoid transaction timeouts
+
 ## Custom Fonts
 
 1. Navigate to `sys_pdf_generation_font_family`
@@ -300,6 +373,8 @@ MyReportRenderer.prototype = {
 | Images not showing | External URL blocked | Convert images to base64 data URIs |
 | `position: absolute` ignored | Not supported by iText7 | Use spacer divs, padding, or table layout |
 | Result is `[object Object]` | Return value is already parsed | Use result directly, don't JSON.parse |
+| Filename is `report.pdf.pdf` | API auto-appends `.pdf` | Pass `'report'` not `'report.pdf'` as pdfName |
+| Transaction timeout on large reports | HTML too large / too many pages | Split into multiple PDFs or reduce page count |
 
 ## Reference Implementation
 
