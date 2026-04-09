@@ -111,13 +111,21 @@ curl -s -u "$SN_USER:$SN_PASS" -X POST \
 
 ## rm_story — Mandatory Fields
 
+> **Full story creation workflow:** See [story-creation-guide.md](story-creation-guide.md) for the step-by-step process including project resolution, assignment group auto-population, and conversation flow.
+
 | # | Field API Name | Label | Type | Notes |
 |---|---|---|---|---|
-| 1 | `project` | Project | Reference (pm_project) | sys_id of the project |
-| 2 | `project_phase` | Project phase | Reference (pm_project_task) | sys_id of the agile phase the story belongs to |
-| 3 | `effort` | Planned effort | Duration | GlideDuration format: `"1970-01-01 HH:00:00"`. E.g., 8 hours = `"1970-01-01 08:00:00"` |
-| 4 | `company` | Company | Reference (core_company) | Same company as the project |
-| 5 | `assignment_group` | Assignment group | Reference (sys_user_group) | Agile team group sys_id (if agile board exists) |
+| 1 | `project` | Project | Reference (pm_project) | Resolve from `pm_project` by keyword search. **ASK user if not specified.** |
+| 2 | `assignment_group` | Assignment group | Reference (sys_user_group) | Auto-populate from project's `u_default_agile_teams`. If multiple, ask user. |
+| 3 | `assigned_to` | Assigned to | Reference (sys_user) | From context or ask user |
+| 4 | `u_update_sets` | Update Sets | String | Update set name + deployment instructions (e.g., `FA-STRY0013753`) |
+| 5 | `effort` | Planned effort | Duration | GlideDuration format: `"1970-01-01 HH:00:00"`. E.g., 8 hours = `"1970-01-01 08:00:00"` |
+| 6 | `short_description` | Short description | String | Concise story title |
+| 7 | `description` | Description | String | Detailed story description |
+| 8 | `acceptance_criteria` | Acceptance criteria | String | Definition of done — testable conditions |
+| 9 | `company` | Company | Reference (core_company) | Always **Mobiz IT** for SN dev stories |
+| 10 | `sys_domain` | Domain | Reference | Always **Mobiz (MSP)** for SN dev stories |
+| 11 | `project_phase` | Project phase | Reference (pm_project_task) | sys_id of agile phase. **Cannot be set on create — requires separate PUT.** |
 
 ### Story Create Example (Mobiz)
 

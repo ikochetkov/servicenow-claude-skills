@@ -30,7 +30,12 @@ Comprehensive knowledge base for managing ServiceNow SPM artifacts via the AI Br
 2. Build your GET request — see [references/ai-bridge-spm.md](references/ai-bridge-spm.md)
 3. Use `sysparm_display_value=all` to get both sys_ids and display values
 
-### Create a Single Record
+### Create a Story (rm_story)
+1. **Follow the story creation guide** — see [references/story-creation-guide.md](references/story-creation-guide.md)
+2. Resolve project → assignment group → assigned to → create with all mandatory fields
+3. Company = Mobiz IT, Domain = Mobiz (MSP) for all ServiceNow dev stories
+
+### Create a Single Record (Other Types)
 1. **Check Mobiz mandatory fields FIRST** — see [references/mobiz-mandatory-fields.md](references/mobiz-mandatory-fields.md)
 2. Identify the table and its key fields from [references/table-reference.md](references/table-reference.md)
 3. Resolve reference field sys_ids first (query sys_user, core_company, pm_project, etc.)
@@ -64,6 +69,7 @@ Comprehensive knowledge base for managing ServiceNow SPM artifacts via the AI Br
 | **Project Management** | [references/project-management.md](references/project-management.md) | Project lifecycle, phases, tasks, milestones, dependencies |
 | **Demand Management** | [references/demand-management.md](references/demand-management.md) | Demand intake, assessment, approval, conversion to project |
 | **Resource Management** | [references/resource-management.md](references/resource-management.md) | Resource plans, allocation, capacity, time cards |
+| **Story Creation Guide** | [references/story-creation-guide.md](references/story-creation-guide.md) | **Start here for creating stories** — mandatory fields, project/group resolution, conversation flow |
 | **Agile Management** | [references/agile-management.md](references/agile-management.md) | Epics, stories, sprints, backlogs, Scrum/SAFe |
 | **Import Workflow** | [references/import-workflow.md](references/import-workflow.md) | Step-by-step bulk import from structured format |
 | **Structured Import Format** | [references/structured-import-format.md](references/structured-import-format.md) | Canonical template for AI-generated project hierarchies |
