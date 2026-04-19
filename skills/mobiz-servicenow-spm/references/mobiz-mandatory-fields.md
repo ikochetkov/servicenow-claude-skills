@@ -168,18 +168,32 @@ curl -s -u "$SN_USER:$SN_PASS" -X PUT \
 
 ---
 
-## Phase Nesting Constraints (ServiceNow Design Rules)
+## Phase Nesting Constraints (ServiceNow Platform Rules)
 
-**These are ServiceNow platform design constraints — do NOT bypass them via API:**
+**Verified on DEV 2026-04-18** against BR `ProjectWorkbenchPhaseValidationAndUpdate` (sys_id `85005e90d713210058c92cf65e6103cf`). The `servicenow_spm` tool enforces these as **preflight** so violations surface before the HTTP round-trip with error code `PHASE_NESTING_INVALID`.
+
+### What each parent type can contain
+
+| Parent | Can have children? | Allowed child `phase_type` |
+|---|---|---|
+| `pm_project` (root) | ✅ yes | waterfall, agile, test |
+| waterfall phase | ✅ yes | waterfall, agile, test |
+| agile phase | ❌ **no** | — (BR aborts insert) |
+| test phase | ❌ **no** | — (BR aborts insert) |
+
+The BR error (verbatim): `Project tasks can added to only waterfall phase`.
 
 ### Agile Phases
-1. **Agile phases (`phase_type: "agile"`) must be TOP-LEVEL only** — direct children of the project. They cannot be nested under other phases.
-2. **Agile phases cannot have child pm_project_task records.** They hold stories only (linked via `project_phase` field on rm_story).
-3. **Do NOT nest agile phases under waterfall phases.** While the API may allow it (bypassing UI validation), this is not the intended design and causes UI issues.
+1. **Agile phases cannot have child `pm_project_task` records.** They hold stories only (linked via `project_phase` on `rm_story`).
+2. **Agile phases CAN be nested under waterfall phases** (verified 2026-04-18 — previous version of this doc was wrong). See Option B (container pattern) below.
 
 ### Waterfall Phases
-4. **Only waterfall phases support nested task hierarchy.** Waterfall phases can have child tasks, sub-phases, and milestones.
-5. **Milestones must be under waterfall phases** (or directly under the project). They cannot be created under agile phases.
+3. **Waterfall phases accept any child `phase_type`** — more waterfall, agile, or test sub-phases, plus milestones.
+4. **Milestones** (`milestone=true`) structurally behave like waterfall children and are only allowed under waterfall or directly under the project — never under agile/test.
+
+### ⚠️ BR coverage gap — insert only
+
+The BR runs only on `pm_project_task` **insert**. An `update()` that changes `parent` to an agile/test phase is NOT blocked by the platform (verified via live reparent probe). The `servicenow_spm` tool adds rule **R2** for tool-level reparent paths, but **direct UI drag-drop still bypasses** — file a Mobiz SPM ticket to extend the BR to updates.
 
 ### Choosing the Right Architecture
 
@@ -218,6 +232,39 @@ Project (pm_project)
   ├── Agile Phase: Sprint 1 (pm_project_task, phase_type: "agile") ← stories link here
   └── Agile Phase: Sprint 2 (pm_project_task, phase_type: "agile") ← stories link here
 ```
+
+---
+
+## Story Placement Rule (rule R3)
+
+**`rm_story.project_phase` MUST target a `pm_project_task` with `phase_type='agile'`.**
+
+The ServiceNow platform does NOT enforce this. Verified on DEV 2026-04-18 — the API accepts any target and fails silently:
+
+| Target of `project_phase` | API result | What actually happens |
+|---|---|---|
+| agile phase | ✅ success | story correctly linked |
+| waterfall phase | "success" | story created but **invisible to sprint/backlog filters** (they key off `phase_type='agile'`) |
+| test phase | "success" | same as above, plus semantically wrong |
+| **pm_project root sys_id** | "success" returned | BR `Sync Phase to Project` silently clears BOTH `project_phase` AND `project` → **story is fully orphaned** |
+
+The `servicenow_spm` tool preflight rejects all non-agile targets with error code `STORY_PHASE_INVALID` (rule R3). PMs get the violation immediately with a fix hint pointing at an agile phase.
+
+If you see this error when importing a SOW: either move the story under a phase where `type='agile'`, or change the target phase's `type` from waterfall/test to `agile`.
+
+---
+
+## Preflight Error Codes (from `servicenow_spm` tool)
+
+When using the tool, these errors fire BEFORE any ServiceNow write so partial-import damage is avoided:
+
+| Error Code | Rule | Trigger |
+|---|---|---|
+| `PHASE_NESTING_INVALID` | R1 | `pm_project_task` insert whose `parent.phase_type ∈ {agile, test}` |
+| `PHASE_REPARENT_INVALID` | R2 | Future `update_phase`/reparent actions — reserved for when the tool exposes a reparent path |
+| `STORY_PHASE_INVALID` | R3 | `rm_story.project_phase` targets a non-agile phase or the project root |
+
+Each violation response includes `path` (e.g. `phases[1].children[0]`), the offending types, and a `fix_hint` string. Surface all violations at once — `create_project_from_sow` collects them across the whole SOW tree so PMs see the complete list in one response.
 
 ---
 

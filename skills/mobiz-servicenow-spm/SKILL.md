@@ -144,11 +144,14 @@ export SN_PASS="password"
 9. **Milestones**: Use `pm_project_task` with `milestone: "true"`, NOT `pm_milestone` table. Must be under waterfall phases or directly under the project.
 10. **Stories**: Must include `project`, `company`, and `assignment_group` (if agile board). `project_phase` must be set via separate PUT (silently ignored during POST).
 11. **Use `sysparm_display_value=all`** when you need both sys_ids and human-readable values
-12. **Phase nesting constraints** (ServiceNow design rules — do NOT bypass via API):
-    - **Agile phases** must be top-level only (direct children of the project)
-    - **Agile phases** cannot have child pm_project_task records — they hold stories only
-    - **Waterfall phases** support nested task hierarchy (sub-tasks, sub-phases, milestones)
-    - See [references/mobiz-mandatory-fields.md](references/mobiz-mandatory-fields.md) → "Phase Nesting Constraints" for architecture options
+12. **Phase nesting constraints** (verified on DEV 2026-04-18 against BR `ProjectWorkbenchPhaseValidationAndUpdate`):
+    - **`pm_project` root** can contain any `phase_type` (waterfall, agile, test)
+    - **Waterfall phases** can contain any `phase_type` — agile phases CAN be nested under waterfall (previously documented otherwise)
+    - **Agile and test phases** cannot have child `pm_project_task` records — BR error: `"Project tasks can added to only waterfall phase"`
+    - **Reparent gap**: BR only runs on `insert`, not `update`. Tool rule R2 covers the API side; UI drag-drop bypasses both
+    - See [references/mobiz-mandatory-fields.md](references/mobiz-mandatory-fields.md) → "Phase Nesting Constraints" for the full matrix + architecture options
+13. **Story placement** (`rm_story.project_phase`) MUST target `phase_type='agile'`. Platform does NOT enforce — waterfall/test targets silently hide the story from sprint/backlog filters; project-root target orphans it entirely.
+14. **Preflight error codes** — when using the `servicenow_spm` tool, hard-stop violations surface as `PHASE_NESTING_INVALID` (R1/R2) or `STORY_PHASE_INVALID` (R3) with `violations[]` list before any write. See [references/mobiz-mandatory-fields.md](references/mobiz-mandatory-fields.md) → "Preflight Error Codes".
 
 ## Integration with Other Skills
 
