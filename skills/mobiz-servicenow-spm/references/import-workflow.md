@@ -230,15 +230,19 @@ Save `GROUP_SYS_ID` — it will be used in all story records.
 
 Create each phase as a `pm_project_task` with `parent` set to the project sys_id. **Always set `phase_type`**.
 
-### Phase Architecture Rules (ServiceNow Design Constraints)
+> **Tool preflight**: if you're using the `servicenow_spm` tool (not raw curl), `create_phase` and `create_project_from_sow` run **rule R1** before POST. A parent with `phase_type ∈ {agile, test}` is rejected with `error_code: "PHASE_NESTING_INVALID"` and a list of violations pointing at the bad nodes (`phases[1].children[0]` style). Fix the SOW structure and retry — no partial project is left behind.
 
-> **CRITICAL**: These are ServiceNow platform rules. Do NOT bypass them via API.
+### Phase Architecture Rules (ServiceNow Platform Constraints)
 
-- **Agile phases** (`phase_type: "agile"`): Must be **top-level only** (direct children of the project). Cannot have child pm_project_task records. Hold stories only (linked via `project_phase`).
-- **Waterfall phases** (`phase_type: "waterfall"`): Can have nested child tasks, sub-phases, and milestones.
-- **Milestones**: Can only exist under waterfall phases or directly under the project.
+Verified on DEV 2026-04-18 against BR `ProjectWorkbenchPhaseValidationAndUpdate`. The BR aborts insert with: `Project tasks can added to only waterfall phase`.
 
-See [mobiz-mandatory-fields.md](mobiz-mandatory-fields.md) → "Phase Nesting Constraints" for full architecture options.
+- **`pm_project` root** can have any `phase_type` children (waterfall / agile / test).
+- **Waterfall phases** can have any `phase_type` children — agile phases CAN be nested under waterfall (previously this doc said "top-level only" — that was wrong).
+- **Agile and test phases** cannot have any `pm_project_task` children. Agile phases hold stories (via `rm_story.project_phase`); test phases are leaves.
+- **Milestones** (`milestone=true` + `phase_type='waterfall'`) only allowed under waterfall or the project root.
+- **BR coverage gap**: the BR runs only on `insert`. Reparent via `update()` is NOT blocked at the platform level. The tool's R2 covers this for its own reparent paths; direct UI drag-drop still bypasses.
+
+See [mobiz-mandatory-fields.md](mobiz-mandatory-fields.md) → "Phase Nesting Constraints" for the full matrix, architecture options, and story-placement rule R3.
 
 ### Example: Agile Phase (top-level, holds stories)
 ```bash
